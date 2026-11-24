@@ -1,7 +1,7 @@
 /* Day Oneness Service Worker
-   アプリ本体：ネット優先（つながっていれば常に最新版、オフラインなら前回の版）
+   アプリ本体：ネット優先（ブラウザのキャッシュを通さず毎回確認。オフラインなら前回の版）
    フォント：保存済みを先に使い、裏で更新 */
-const CACHE = 'day-oneness-v1';
+const CACHE = 'day-oneness-v2';
 const FONT_CACHE = 'day-oneness-fonts';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
@@ -24,7 +24,7 @@ self.addEventListener('fetch', (e) => {
 
   if (url.origin === self.location.origin) {
     e.respondWith(
-      fetch(req)
+      (req.mode === 'navigate' ? fetch(req.url, { cache: 'no-cache' }) : fetch(req, { cache: 'no-cache' }))
         .then((res) => {
           if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
           return res;
