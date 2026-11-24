@@ -287,6 +287,28 @@ html[data-page="rem"] #remPage{display:block}
 .todo-evs button+button{border-top:1px solid var(--line)}
 .todo-evs button:hover{background:var(--surface-2)}
 .todo-evs .ic{color:var(--muted)}
+.tpl-apply{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:12px;padding:9px 0;border:1px dashed var(--line);border-radius:10px;font-size:.84rem;font-weight:700;color:var(--muted)}
+.tpl-apply:hover{color:var(--accent);border-color:var(--accent)}
+.tpl-apply .ic{width:16px;height:16px}
+.tpl-card{display:flex;flex-direction:column;gap:4px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-align:left;color:var(--fg)}
+.tpl-card:hover{border-color:var(--muted)}
+.tpl-c-head{display:flex;align-items:center;gap:10px}
+.tpl-c-head b{font-size:1rem}
+.tpl-c-head small{flex:1;color:var(--accent);font-weight:700;font-size:.78rem}
+.tpl-c-head .ic{color:var(--muted)}
+.tpl-c-items{font-size:.8rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wd-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.wd-b{height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:700;color:var(--fg)}
+.wd-b.sun{color:#c0473a}.wd-b.sat{color:#3d62a0}
+.wd-b.is-on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.tpl-items{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px;color:var(--fg);font-weight:500}
+.tpl-item{display:grid;grid-template-columns:62px minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px 12px;text-align:left}
+.tpl-item+.tpl-item{border-top:1px solid var(--line)}
+.tpl-item:hover{background:var(--surface-2)}
+.tpl-item .t{font-size:.88rem;line-height:1.25}.tpl-item .t small{display:block;font-size:.72rem;color:var(--muted)}
+.tpl-item .ttl{font-weight:700;overflow-wrap:anywhere}
+.tpl-item .dur{font-size:.78rem;color:var(--muted)}
+#tp-additem{width:100%}
 .num-row{display:flex;align-items:center;gap:8px;color:var(--fg);font-weight:500}
 .num-row input{width:6.5em;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:1rem;color:var(--fg);font-variant-numeric:tabular-nums}
 .num-tag{font-size:.76rem;font-weight:700;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;white-space:nowrap}
@@ -521,6 +543,7 @@ const ICONS={
   net:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>',
   photo:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/>',
   clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  repeat:'<path d="M17 3l3 3-3 3"/><path d="M4 11V9a3 3 0 0 1 3-3h13"/><path d="M7 21l-3-3 3-3"/><path d="M20 13v2a3 3 0 0 1-3 3H4"/>',
   grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
   upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M4 14v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/>',
   download:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M4 14v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/>',
@@ -601,7 +624,7 @@ function clearSamples(){
 }
 
 /* ---------- 描画 ---------- */
-function render(){renderHeader();renderWeek();renderNotice();renderMonthAll();renderSchedule();renderRecords();renderReminders()}
+function render(){autoApplyTemplates(state.date);renderHeader();renderWeek();renderNotice();renderMonthAll();renderSchedule();renderRecords();renderReminders()}
 
 function renderHeader(){
   const d=parse(state.date),isT=state.date===today();
@@ -664,7 +687,8 @@ function renderSchedule(){
   const isT=state.date===today(),nowM=(()=>{const d=new Date();return d.getHours()*60+d.getMinutes()})();
   const title=e=>`${e.special?'<i class="sp-dot" title="特別な予定"></i>':''}${esc(e.title)}${linked.has(e.id)?'<span class="linked">記録済み</span>':''}`;
   const sum=`<p class="sum">${busy?`予定 <b>${fmtDur(busy)}</b>　`:''}自由時間 <b>${fmtDur(free)}</b></p>`;
-  if(!list.length&&!carry.length){$('#sched').innerHTML=`${sum}<p class="empty">予定はありません。</p>`;return}
+  const tplBtn=`<button type="button" class="tpl-apply" data-tplapply>${icon('repeat')}テンプレートを入れる</button>`;
+  if(!list.length&&!carry.length){$('#sched').innerHTML=`${sum}<p class="empty">予定はありません。</p>${tplBtn}`;return}
   const P=m=>m/14.4;
 
   /* スマホ：一日の帯＋一覧 */
@@ -691,7 +715,7 @@ function renderSchedule(){
   if(isT&&nowM>=sH*60&&nowM<=eH*60)h+=`<div class="tl-now" style="top:${(nowM-sH*60)/60*PX}px" aria-hidden="true"></div>`;
   const tview=items.length||gaps.length?`<div class="tl" style="height:${(eH-sH)*PX}px">${h}</div>`:'';
   const ad=allday.length?`<div class="allday-row">${allday.map(e=>`<button type="button" class="allday-b" data-event="${e.id}"><span class="t allday">終日</span>${title(e)}</button>`).join('')}</div>`:'';
-  $('#sched').innerHTML=sview+`<div class="sv-t">${sum}${ad}${tview}</div>`;
+  $('#sched').innerHTML=sview+`<div class="sv-t">${sum}${ad}${tview}</div>`+tplBtn;
 }
 
 function renderRecords(){
@@ -1060,10 +1084,96 @@ function freeSec(){
     <div class="awake"><label for="aw-s">起きる</label><select id="aw-s">${opts(A,0,1410)}</select><span>〜</span><label for="aw-e">寝る</label><select id="aw-e">${opts(B,30,1440)}</select></div></div>`;
 }
 
+/* ---------- スケジュールのテンプレート ---------- */
+const WD=['日','月','火','水','木','金','土'];
+const tpls=()=>(state.meta.schedTemplates||[]).map(t=>({...t,days:[...(t.days||[])],items:(t.items||[]).map(i=>({...i}))}));
+function saveTpls(list){setMeta('schedTemplates',list)}
+const tplDaysText=d=>{const s=[...d].sort((a,b)=>a-b).join(',');if(!d.length)return '自動では入れない';if(s==='1,2,3,4,5')return '平日';if(s==='0,6')return '土日';if(d.length===7)return '毎日';return [...d].sort((a,b)=>((a+6)%7)-((b+6)%7)).map(x=>WD[x]).join('・')};
+const itemList=t=>t.items.length?[...t.items].sort((a,b)=>toMin(a.time)-toMin(b.time)).map(i=>`${i.time} ${esc(i.title)}`).join('　'):'予定がありません';
+function applyTemplate(t,date){
+  const ex=state.events.filter(e=>alive(e)&&e.date===date);let n=0;
+  t.items.forEach(i=>{if(ex.some(e=>e.time===i.time&&e.title===i.title))return;
+    upsert(state.events,'events',{id:uid(),date,time:i.time,endTime:i.endTime,endNext:!!i.endNext,title:i.title,memo:i.memo||'',special:!!i.special,fromTemplateId:t.id});n++});
+  return n;
+}
+function autoApplyTemplates(date){
+  if(!date||date<today())return false;
+  const list=tpls().filter(t=>t.auto&&t.days.includes(parse(date).getDay())&&t.items.length);if(!list.length)return false;
+  const ap={...(state.meta.tplApplied||{})},done=ap[date]||[];let changed=false;
+  list.forEach(t=>{if(done.includes(t.id))return;applyTemplate(t,date);done.push(t.id);changed=true});
+  if(changed){ap[date]=done;const keep=addDays(today(),-7);Object.keys(ap).forEach(k=>{if(k<keep)delete ap[k]});setMeta('tplApplied',ap)}
+  return changed;
+}
+function openTplApply(){
+  const list=tpls();const d=parse(state.date);
+  if(!list.length){openSheet('テンプレートを入れる',`<p class="hint" style="margin:0 0 14px">テンプレートはまだありません。設定の「時間」から作れます。</p><button type="button" class="btn-primary" id="ta-go" style="width:100%">テンプレートを作る</button>`,s=>{$('#ta-go',s).onclick=()=>{closeSheet();openSettings();state.setSec='tpl';renderSettings()}});return}
+  openSheet(`${d.getMonth()+1}月${d.getDate()}日に入れる`,`<p class="hint" style="margin:0 0 12px">同じ時刻・同じ名前の予定がすでにあるものは入れません。</p><div class="stack">${list.map(t=>`<button type="button" class="tpl-card" data-apply="${t.id}"><span class="tpl-c-head"><b>${esc(t.name)}</b><small>${tplDaysText(t.days)}</small></span><span class="tpl-c-items num">${itemList(t)}</span></button>`).join('')}</div>`,
+  s=>$$('[data-apply]',s).forEach(b=>b.onclick=()=>{const t=list.find(x=>x.id===b.dataset.apply);if(!t)return;const n=applyTemplate(t,state.date);closeSheet();render();toast(n?`${n}件の予定を入れました`:'入れる予定はありませんでした')}));
+}
+function tplSec(){
+  const list=tpls();
+  return `<p class="set-note">曜日ごとに決まっている予定をまとめておけます。選んだ曜日は、その日を開いたときに自動で予定が入ります。ほかの日はスケジュールの「テンプレートを入れる」から入れられます。</p>
+    <div class="stack">${list.length?list.map(t=>`<button type="button" class="tpl-card" data-tpl="${t.id}"><span class="tpl-c-head"><b>${esc(t.name)}</b><small>${tplDaysText(t.days)}${t.auto&&t.days.length?'・自動':''}</small>${icon('chevR')}</span><span class="tpl-c-items num">${itemList(t)}</span></button>`).join(''):'<p class="empty">テンプレートはまだありません。</p>'}
+    <button type="button" class="btn-ghost" id="tpl-new">${icon('plus')}テンプレートを作る</button></div>`;
+}
+function mountTpl(s){
+  $$('[data-tpl]',s).forEach(b=>b.onclick=()=>openTplForm(tpls().find(t=>t.id===b.dataset.tpl)));
+  $('#tpl-new',s).onclick=()=>openTplForm(null);
+}
+function openTplForm(src){
+  const isNew=!src,t=src?{...src,days:[...src.days],items:src.items.map(i=>({...i}))}:{id:uid(),name:'',days:[1,2,3,4,5],auto:true,items:[]};
+  const draw=()=>{
+    const sorted=[...t.items].sort((a,b)=>toMin(a.time)-toMin(b.time));
+    openSheet(isNew?'テンプレートを作る':'テンプレートを編集',`<form class="form" id="tplForm" novalidate>
+      <label>名前<input id="tp-name" type="text" maxlength="30" value="${esc(t.name)}" placeholder="例：平日"></label>
+      <div class="field-label">曜日<div class="wd-row" role="group" aria-label="曜日">${[1,2,3,4,5,6,0].map(d=>`<button type="button" class="wd-b${t.days.includes(d)?' is-on':''}${d===0?' sun':d===6?' sat':''}" aria-pressed="${t.days.includes(d)}" data-wd="${d}">${WD[d]}</button>`).join('')}</div></div>
+      <label class="check"><input type="checkbox" id="tp-auto"${t.auto?' checked':''}>選んだ曜日は、その日を開いたときに自動で予定を入れる</label>
+      <div class="field-label">予定<div class="tpl-items">${sorted.length?sorted.map(i=>`<button type="button" class="tpl-item" data-item="${i.id}"><span class="t num">${i.time}<small>〜${endLabel(i)}</small></span><span class="ttl">${i.special?'<i class="sp-dot"></i>':''}${esc(i.title)}</span><span class="dur num">${fmtDur(evDur(i))}</span></button>`).join(''):'<p class="empty" style="padding:10px 4px">まだ予定がありません。</p>'}</div><button type="button" class="btn-ghost" id="tp-additem" style="color:var(--fg)">${icon('plus')}予定を追加</button></div>
+      <div class="form-actions">${isNew?'':'<button type="button" class="btn-danger" id="tp-del">削除</button>'}<span class="spacer"></span><button type="button" class="btn-ghost" data-close>キャンセル</button><button type="submit" class="btn-primary">保存</button></div></form>`,
+    s=>{
+      const keep=()=>{t.name=$('#tp-name',s).value;t.auto=$('#tp-auto',s).checked};
+      $$('[data-wd]',s).forEach(b=>b.onclick=()=>{const d=+b.dataset.wd;t.days=t.days.includes(d)?t.days.filter(x=>x!==d):[...t.days,d];const on=t.days.includes(d);b.classList.toggle('is-on',on);b.setAttribute('aria-pressed',on)});
+      $('#tp-additem',s).onclick=()=>{keep();openTplItemForm(t,null,draw)};
+      $$('[data-item]',s).forEach(b=>b.onclick=()=>{keep();openTplItemForm(t,t.items.find(i=>i.id===b.dataset.item),draw)});
+      $('#tplForm',s).onsubmit=x=>{x.preventDefault();keep();t.name=t.name.trim();
+        if(!t.name){$('#tp-name',s).focus();toast('名前を入れてください');return}
+        const list=tpls(),i=list.findIndex(z=>z.id===t.id);if(i>=0)list[i]=t;else list.push(t);saveTpls(list);
+        closeSheet();renderSettings();if(autoApplyTemplates(state.date))renderSchedule();toast(isNew?'テンプレートを作りました':'テンプレートを保存しました')};
+      const del=$('#tp-del',s);if(del)armDelete(del,()=>{saveTpls(tpls().filter(z=>z.id!==t.id));closeSheet();renderSettings();toast('テンプレートを削除しました')});
+    });
+  };
+  draw();
+}
+function openTplItemForm(t,item,back){
+  const it=item?{...item}:{id:uid(),time:'09:00',endTime:'10:00',endNext:false,title:'',special:false,memo:''};
+  openSheet(item?'予定を編集':'予定を追加',`<form class="form" id="tiForm" novalidate>
+    <label>タイトル<input id="ti-title" type="text" maxlength="80" value="${esc(it.title)}" placeholder="例：仕事"></label>
+    <div class="tp-sec"><span class="tp-lbl">開始</span>${tpHTML('ti-start',it.time)}</div>
+    <div class="tp-sec"><div class="tp-lbl-row"><span class="tp-lbl">終了予定</span><div class="seg seg-sm" role="radiogroup" aria-label="終了の日"><button type="button" class="seg-b" role="radio" data-endday="same">当日</button><button type="button" class="seg-b" role="radio" data-endday="next">翌日</button></div></div>${tpHTML('ti-end',it.endTime)}</div>
+    <label class="check"><input type="checkbox" id="ti-special"${it.special?' checked':''}>特別な予定としてカレンダーに印をつける</label>
+    <div class="form-actions">${item?'<button type="button" class="btn-danger" id="ti-del">削除</button>':''}<span class="spacer"></span><button type="button" class="btn-ghost" id="ti-back">戻る</button><button type="submit" class="btn-primary">決定</button></div></form>`,
+  s=>{
+    const st=tpMount($('#ti-start',s)),en=tpMount($('#ti-end',s));let endNext=!!it.endNext;
+    const setEndDay=v=>{endNext=v==='next';$$('[data-endday]',s).forEach(b=>{const on=b.dataset.endday===v;b.classList.toggle('is-on',on);b.setAttribute('aria-checked',on)})};
+    setEndDay(endNext?'next':'same');$$('[data-endday]',s).forEach(b=>b.onclick=()=>setEndDay(b.dataset.endday));
+    $('#ti-start',s).addEventListener('tpchange',()=>{if(endNext)return;const sm=toMin(st.get());if(toMin(en.get())<=sm){const n=sm+60;if(n>=1440){setEndDay('next');en.set(fromMin(n-1440))}else en.set(fromMin(n))}});
+    $('#ti-end',s).addEventListener('tpchange',()=>{if(!endNext&&toMin(en.get())<=toMin(st.get()))setEndDay('next')});
+    $('#ti-back',s).onclick=back;
+    $('#tiForm',s).onsubmit=x=>{x.preventDefault();const title=$('#ti-title',s).value.trim();
+      if(!title){$('#ti-title',s).focus();toast('タイトルを入れてください');return}
+      const tm=st.get(),et=en.get();
+      if(!endNext&&toMin(et)<=toMin(tm)){toast('終了が開始より前です。日付をまたぐなら「翌日」を選んでください');return}
+      if(endNext&&toMin(et)>toMin(tm)){toast('翌日の終了は、開始と同じ時刻までにしてください');return}
+      Object.assign(it,{title,time:tm,endTime:et,endNext,special:$('#ti-special',s).checked});
+      const i=t.items.findIndex(z=>z.id===it.id);if(i>=0)t.items[i]=it;else t.items.push(it);back()};
+    const d=$('#ti-del',s);if(d)armDelete(d,()=>{t.items=t.items.filter(z=>z.id!==it.id);back()});
+  });
+}
+
 /* ---------- 設定ページ ---------- */
 const SET_GROUPS=[
   {g:'見た目',items:[['theme','テーマカラー','grid'],['bg','背景画像','photo']]},
-  {g:'時間',items:[['free','自由時間の計算','clock']]},
+  {g:'時間',items:[['tpl','予定のテンプレート','repeat'],['free','自由時間の計算','clock']]},
   {g:'データ',items:[['export','書き出し','upload'],['import','読み込み','download']]}
 ];
 const setLabel=id=>{for(const g of SET_GROUPS)for(const [k,l] of g.items)if(k===id)return l;return '設定'};
@@ -1092,7 +1202,7 @@ function mountFree(s){
   aws.onchange=saveAw;awe.onchange=saveAw;
 }
 function mountExport(s){
-  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,todoCats:state.meta.todoCats||[],categories:CATS,photos:[...state.photos.values()]};
+  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,todoCats:state.meta.todoCats||[],schedTemplates:state.meta.schedTemplates||[],categories:CATS,photos:[...state.photos.values()]};
     const o=$('#d-out',s);o.value=JSON.stringify(data);o.hidden=false;$('#d-copy',s).hidden=false;if(window.self===window.top){const dl=$('#d-dl',s);dl.hidden=false;dl.onclick=()=>{try{const url=URL.createObjectURL(new Blob([o.value],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=`day-oneness-${today().replace(/-/g,'')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('ファイルに保存しました')}catch(e){toast('保存できませんでした。コピーを使ってください')}}}setMeta('lastExport',nowIso());renderHeader();o.select()};
   $('#d-copy',s).onclick=()=>{const o=$('#d-out',s);try{navigator.clipboard.writeText(o.value).then(()=>toast('コピーしました'),()=>{o.select();toast('選択した文字をコピーしてください')})}catch(e){o.select();toast('選択した文字をコピーしてください')}};
 }
@@ -1105,11 +1215,12 @@ function mountImport(s){
     await Promise.all(['events','entries','photos','reminders'].map(clearStore));
     state.reminders=Array.isArray(d.reminders)?d.reminders:[];state.reminders.forEach(o=>put('reminders',o));
     if(Array.isArray(d.todoCats))setMeta('todoCats',d.todoCats);
+    if(Array.isArray(d.schedTemplates))setMeta('schedTemplates',d.schedTemplates);
     state.events=d.events;state.entries=d.entries;state.photos=new Map();
     d.events.forEach(o=>put('events',o));d.entries.forEach(o=>put('entries',o));(d.photos||[]).forEach(p=>{state.photos.set(p.id,p);put('photos',p)});
     render();setPage(state.prevPage||'day');toast('データを読み込みました')});
 }
-const SET_SECS={theme:[themeSec,mountTheme],bg:[bgSec,mountBg],free:[freeSec,mountFree],export:[exportSec,mountExport],import:[importSec,mountImport]};
+const SET_SECS={theme:[themeSec,mountTheme],bg:[bgSec,mountBg],tpl:[tplSec,mountTpl],free:[freeSec,mountFree],export:[exportSec,mountExport],import:[importSec,mountImport]};
 function renderSettings(){
   const wide=window.innerWidth>=600;state.setWide=wide;
   if(wide&&!state.setSec)state.setSec='theme';
@@ -1142,6 +1253,7 @@ $('#setNav').addEventListener('click',e=>{const b=e.target.closest('[data-set]')
 let rzT;window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(state.page==='set'&&(window.innerWidth>=600)!==state.setWide)renderSettings()},150)});
 
 document.addEventListener('click',e=>{
+  if(e.target.closest('[data-tplapply]')){openTplApply();return}
   const t=e.target.closest('[data-photo],[data-mnav],[data-date],[data-event],[data-entry],[data-add],[data-close],[data-clear-samples]');if(!t)return;
   const ds=t.dataset;
   if(ds.photo!==undefined){e.stopPropagation();openPhoto(ds.photo);return}
