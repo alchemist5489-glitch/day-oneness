@@ -513,6 +513,111 @@ html.has-bgimg .mv-card{background:color-mix(in srgb,var(--surface) var(--panel-
 }
 @keyframes up{from{transform:translateY(24px);opacity:.6}}
 @keyframes pop{from{transform:translate(-50%,-48%);opacity:.6}}
+
+/* ===== テーマ（形と質感）：スタンダード以外は専用の配色を持つ ===== */
+:root{--font-head:var(--font);--deco:var(--line);--time:var(--muted);--hdr:var(--surface-2)}
+.hd-date h1,.pane-head h2,.card-head h3,.set-head h1,.mv-head h2,.rem-sec h2,.set-h{font-family:var(--font-head)}
+.sched .t:not(.allday){color:var(--time)}
+
+/* --- 配色（テーマ見本 .sp にも同じ色を使う） --- */
+html:root:root:root[data-style="fantasy"],.sp[data-sp="fantasy"]{
+  --bg:#ece2c8;--surface:#fbf3de;--surface-2:#f3e7c7;--line:#d6bf8e;--fg:#3a2c1a;--muted:#7a6648;--accent:#2f5a43;--accent-fg:#fbf3de;--accent-soft:#e6dcb8;
+  --read:#3d6b4c;--read-soft:#e1e6c6;--watch:#8a4f2a;--watch-soft:#f0dcbe;--done:#4a5280;--done-soft:#e7e3ef;--thought:#7a4466;--thought-soft:#f1dfe4;
+  --photo:#eedfbb;--danger:#a3412c;--scrim:rgba(40,30,15,.4);--deco:#b8955a;--time:#7a6648;--hdr:#f1e3bd;
+  --font-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;--r:10px;--r-sm:8px;color-scheme:light}
+html:root:root:root[data-style="cyber"],.sp[data-sp="cyber"]{
+  --bg:#0b1020;--surface:#141c2e;--surface-2:#0f1628;--line:#2b3b58;--fg:#e8f1ff;--muted:#8ea3c2;--accent:#7cf2e2;--accent-fg:#06141a;--accent-soft:#11343a;
+  --read:#6ee7b7;--read-soft:#123327;--watch:#ff70b8;--watch-soft:#3a1834;--done:#9db6ff;--done-soft:#1b2747;--thought:#d59cff;--thought-soft:#2b1c45;
+  --photo:#0e1526;--danger:#ff7a8a;--scrim:rgba(0,0,0,.6);--deco:#2f4566;--time:#7cf2e2;--hdr:#111a2e;
+  --font-head:var(--font);--r:3px;--r-sm:3px;color-scheme:dark}
+html:root:root:root[data-style="retro"],.sp[data-sp="retro"]{
+  --bg:#e9eee3;--surface:#fffaf0;--surface-2:#f6efdd;--line:#d8d2bf;--fg:#3b2a26;--muted:#7d6b63;--accent:#8c3246;--accent-fg:#fffaf0;--accent-soft:#f3dde1;
+  --read:#3f7d6a;--read-soft:#d6ebe2;--watch:#a8455d;--watch-soft:#f6dbe2;--done:#8a6a1f;--done-soft:#f5e5bd;--thought:#6c4f8a;--thought-soft:#e8dff0;
+  --photo:#f6e2b8;--danger:#a3324a;--scrim:rgba(40,25,20,.38);--deco:#b9a89a;--time:#7d6b63;--hdr:#f7e2bb;
+  --font-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;--r:14px;--r-sm:10px;color-scheme:light}
+html:root:root:root[data-style="moon"],.sp[data-sp="moon"]{
+  --bg:#141129;--surface:#221d3d;--surface-2:#1b1733;--line:#3b3462;--fg:#ece8ff;--muted:#a59ecb;--accent:#d8c8ff;--accent-fg:#1e1838;--accent-soft:#2e2752;
+  --read:#8fd1ae;--read-soft:#1f3a31;--watch:#f2a7b9;--watch-soft:#3d2236;--done:#aab7ff;--done-soft:#262f55;--thought:#dba9f2;--thought-soft:#352446;
+  --photo:#1c1736;--danger:#ff9a8a;--scrim:rgba(0,0,0,.55);--deco:#6f66a3;--time:#f2d58a;--hdr:#252046;
+  --font-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;--r:16px;--r-sm:12px;color-scheme:dark}
+
+/* --- 共通：ヘッダーを箱に、見出しに区切り線 --- */
+html[data-style] .topbar{background:var(--bg)}
+html[data-style] .pane-head h2{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+html[data-style] .pane-head h2::after{content:"";flex:1;min-width:16px;height:9px;background:linear-gradient(var(--deco),var(--deco)) left center/calc(100% - 8px) 1px no-repeat,radial-gradient(circle,var(--deco) 55%,transparent 60%) right center/7px 7px no-repeat}
+html[data-style] .pane-head{gap:10px}
+html[data-style] .card,html[data-style] .rem,html[data-style] .set-item,html[data-style] .th-row,html[data-style] .tpl-card{border-radius:var(--r-sm)}
+html[data-style] .pane,html[data-style] .week,html[data-style] .set-card,html[data-style] .mv-card{border-radius:var(--r)}
+html.has-bgimg[data-style]:not([data-style="fantasy"]) .topbar{background-color:transparent}
+html.has-bgimg[data-style="fantasy"] .topbar{background-color:transparent;background-image:linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a)}
+html.has-bgimg[data-style="cyber"] .topbar{background-image:linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--line),var(--line))}
+
+/* --- ファンタジー：紙の質感、金の四隅飾り --- */
+html[data-style="fantasy"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .15 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+html[data-style="fantasy"] .topbar{--c:#b8955a;background:
+  linear-gradient(var(--c),var(--c)) top 6px left 6px/14px 1.5px no-repeat,linear-gradient(var(--c),var(--c)) top 6px left 6px/1.5px 14px no-repeat,
+  linear-gradient(var(--c),var(--c)) top 6px right 6px/14px 1.5px no-repeat,linear-gradient(var(--c),var(--c)) top 6px right 6px/1.5px 14px no-repeat,
+  linear-gradient(var(--c),var(--c)) bottom 6px left 6px/14px 1.5px no-repeat,linear-gradient(var(--c),var(--c)) bottom 6px left 6px/1.5px 14px no-repeat,
+  linear-gradient(var(--c),var(--c)) bottom 6px right 6px/14px 1.5px no-repeat,linear-gradient(var(--c),var(--c)) bottom 6px right 6px/1.5px 14px no-repeat,var(--bg);padding:12px 8px 12px 18px;margin-top:6px}
+html[data-style="fantasy"] .pane-head h2::after{background:linear-gradient(var(--deco),var(--deco)) left center/calc(100% - 9px) 1px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Cpath d='M4.5 0 9 4.5 4.5 9 0 4.5z' fill='%23b8955a'/%3E%3C/svg%3E") right center/9px 9px no-repeat}
+html[data-style="fantasy"] .card{border-color:#cfb582}
+html[data-style="fantasy"] .nav-add{box-shadow:inset 0 0 0 1.5px #b8955a}
+
+/* --- サイバーパンク：斜めの角、光る線、点の格子 --- */
+html[data-style="cyber"] body{background-image:radial-gradient(circle,rgba(124,242,226,.10) 1px,transparent 1.4px);background-size:18px 18px}
+html[data-style="cyber"] .topbar{background:linear-gradient(var(--accent),var(--accent)) top 6px left 0/38px 2px no-repeat,linear-gradient(var(--line),var(--line)) bottom 4px right 0/120px 1px no-repeat,var(--bg)}
+html[data-style="cyber"] .pane-head h2::before{content:"";width:3px;height:1.05em;background:var(--accent);box-shadow:0 0 8px var(--accent);flex:none;margin-right:-4px}
+html[data-style="cyber"] .pane-head h2::after{background:linear-gradient(var(--deco),var(--deco)) left center/100% 1px no-repeat}
+html[data-style="cyber"] .card,html[data-style="cyber"] .rem,html[data-style="cyber"] .pane,html[data-style="cyber"] .week,html[data-style="cyber"] .set-card,html[data-style="cyber"] .mv-card{--cut:11px;clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)));
+  background-image:linear-gradient(225deg,transparent calc(var(--cut)*.7071 - .8px),var(--line) calc(var(--cut)*.7071 - .8px) calc(var(--cut)*.7071 + .6px),transparent calc(var(--cut)*.7071 + .6px)),linear-gradient(45deg,transparent calc(var(--cut)*.7071 - .8px),var(--line) calc(var(--cut)*.7071 - .8px) calc(var(--cut)*.7071 + .6px),transparent calc(var(--cut)*.7071 + .6px));
+  background-size:var(--cut) var(--cut);background-position:top right,bottom left;background-repeat:no-repeat}
+html[data-style="cyber"] .card{position:relative}
+html[data-style="cyber"] .card::before{content:"";position:absolute;left:0;top:14px;width:3px;height:20px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+html[data-style="cyber"] .sched .t,html[data-style="cyber"] .tl-b small,html[data-style="cyber"] .hd-date h1{font-family:ui-monospace,"Roboto Mono","Droid Sans Mono",monospace;letter-spacing:.02em}
+html[data-style="cyber"] .hd-date h1{text-shadow:0 0 12px rgba(124,242,226,.35)}
+html[data-style="cyber"] .navbar{border-radius:4px;box-shadow:0 0 0 1px rgba(124,242,226,.12),0 8px 24px rgba(0,0,0,.4)}
+html[data-style="cyber"] .nav-b,html[data-style="cyber"] .nav-add{border-radius:3px}
+html[data-style="cyber"] .nav-add{clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));box-shadow:0 0 14px rgba(124,242,226,.45)}
+html[data-style="cyber"] .wk-day.is-sel{box-shadow:0 0 12px rgba(124,242,226,.5)}
+html[data-style="cyber"] .chip{border-radius:2px}
+
+/* --- レトロ：チェック柄の帯、ミルク色 --- */
+html[data-style="retro"] .topbar{margin-bottom:12px}
+html[data-style="retro"] .topbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:10px;
+  background:linear-gradient(90deg,#8c3246 50%,transparent 0) 0 0/26px 5px repeat-x,linear-gradient(90deg,transparent 50%,#8c3246 0) 0 5px/26px 5px repeat-x}
+html[data-style="retro"] .pane-head h2::after{background:linear-gradient(var(--deco),var(--deco)) left center/calc(100% - 8px) 1px no-repeat,radial-gradient(circle,#8c3246 55%,transparent 60%) right center/8px 8px no-repeat}
+html[data-style="retro"] .nav-add,html[data-style="retro"] .btn-primary{box-shadow:0 2px 0 #5e1f2e}
+
+/* --- ムーンリット：星空と月 --- */
+html[data-style="moon"] body{background-image:
+  radial-gradient(1px 1px at 20px 30px,#fff8 50%,transparent 51%),radial-gradient(1.2px 1.2px at 140px 80px,#fffa 50%,transparent 51%),
+  radial-gradient(1px 1px at 90px 160px,#fff6 50%,transparent 51%),radial-gradient(1.4px 1.4px at 200px 210px,#f2d58acc 50%,transparent 51%),
+  radial-gradient(1px 1px at 250px 40px,#fff7 50%,transparent 51%);background-size:280px 260px}
+html[data-style="moon"] .topbar::after{content:"✦ ☾ ✦";position:absolute;right:10px;bottom:0;font-size:.62rem;letter-spacing:.2em;color:#f2d58a;pointer-events:none}
+html[data-style="moon"] .pane-head h2::after{background:linear-gradient(var(--deco),var(--deco)) left center/calc(100% - 9px) 1px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Cpath d='M4.5 0 9 4.5 4.5 9 0 4.5z' fill='%23d8c8ff'/%3E%3C/svg%3E") right center/9px 9px no-repeat}
+html[data-style="moon"] .card,html[data-style="moon"] .pane{box-shadow:0 0 0 1px rgba(216,200,255,.04),0 8px 26px rgba(0,0,0,.25)}
+
+/* --- テーマの見本（設定画面） --- */
+.st-list{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+@media (min-width:600px){.st-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.st-opt{display:flex;flex-direction:column;gap:10px;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);text-align:left;color:var(--fg)}
+.st-opt:hover{border-color:var(--muted)}
+.st-opt.is-on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.st-opt-name{display:flex;align-items:center;gap:8px;font-weight:700;padding:0 4px}
+.st-opt-name small{flex:1;font-weight:500;font-size:.74rem;color:var(--muted)}
+.st-opt .ck{color:var(--accent);visibility:hidden}.st-opt.is-on .ck{visibility:visible}
+.sp{background:var(--bg);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px;color:var(--fg);border:1px solid rgba(128,128,128,.25);pointer-events:none}
+.sp-hd{background:var(--hdr,var(--surface-2));border:1px solid var(--line);border-radius:calc(var(--r,14px) * .6);padding:6px 10px;font-family:var(--font-head,var(--font));font-weight:700;font-size:1.05rem}
+.sp-hd small{font-family:var(--font);font-size:.7rem;color:var(--muted);margin-left:6px}
+.sp-h{display:flex;align-items:center;gap:8px;font-family:var(--font-head,var(--font));font-weight:700;font-size:.82rem}
+.sp-h::after{content:"";flex:1;height:1px;background:var(--deco,var(--line))}
+.sp-row{font-size:.72rem;display:flex;gap:10px}.sp-row b{font-weight:500;color:var(--time,var(--muted));font-variant-numeric:tabular-nums}
+.sp-card{background:var(--surface);border:1px solid var(--line);border-radius:calc(var(--r-sm,10px) * .8);padding:6px 8px;display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700}
+.sp-card i{font-style:normal;font-size:.62rem;padding:1px 6px;border-radius:4px;background:var(--watch-soft);color:var(--watch)}
+.sp-btn{height:20px;border-radius:999px;background:var(--accent)}
+.th-off{opacity:.45;pointer-events:none}
+.st-colors{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.set-sub{margin:0 0 6px;font-size:1.02rem;font-weight:700;font-family:var(--font-head)}
 </style>
 </head>
 <body>
@@ -590,6 +695,7 @@ const ICONS={
   net:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>',
   photo:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/>',
   clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  sparkle:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
   repeat:'<path d="M17 3l3 3-3 3"/><path d="M4 11V9a3 3 0 0 1 3-3h13"/><path d="M7 21l-3-3 3-3"/><path d="M20 13v2a3 3 0 0 1-3 3H4"/>',
   grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
   upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M4 14v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/>',
@@ -1022,6 +1128,39 @@ function applyTheme(id){
   try{const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',getComputedStyle(r).getPropertyValue('--bg').trim())}catch(e){}
 }
 
+
+/* ---------- テーマ（形と質感） ---------- */
+const STYLES=[
+  {id:'standard',name:'スタンダード',desc:'基本の見た目。7つの色から選べます'},
+  {id:'fantasy',name:'ファンタジー',desc:'旅の手帳。紙色・深緑・古い金色'},
+  {id:'cyber',name:'サイバーパンク',desc:'端末ログ。濃紺・シアン・マゼンタ'},
+  {id:'retro',name:'レトロ',desc:'ミルク色・ミント・チェリー色'},
+  {id:'moon',name:'ムーンリット',desc:'夜空の紫・月明かり・淡い金色'}
+];
+let minchoLoaded=false;
+function loadMincho(){if(minchoLoaded)return;minchoLoaded=true;try{const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&display=swap';document.head.appendChild(l)}catch(e){}}
+function applyStyle(id){
+  if(!STYLES.some(t=>t.id===id))id='standard';
+  const r=document.documentElement;
+  if(id==='standard')r.removeAttribute('data-style');else r.setAttribute('data-style',id);
+  if(id==='fantasy'||id==='retro'||id==='moon')loadMincho();
+  try{localStorage.setItem('sd-style',id)}catch(e){}
+  try{const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',getComputedStyle(r).getPropertyValue('--bg').trim())}catch(e){}
+}
+const curStyle=()=>state.meta.styleTheme||'standard';
+function styleSec(){
+  loadMincho();const cur=curStyle();
+  const prev=id=>`<div class="sp"${id==='standard'?'':` data-sp="${id}"`} aria-hidden="true"><div class="sp-hd">11月24日<small>火</small></div><div class="sp-h">スケジュール</div><div class="sp-row"><b>12:30</b>昼休みに読書</div><div class="sp-card"><i>映画</i>映画を1本</div><div class="sp-btn"></div></div>`;
+  const colors=cur==='standard'?`<div class="st-colors"><h3 class="set-sub">スタンダードの色</h3><p class="set-note">読んだ・観たの色は、どの色でも緑と茶のままです。</p>${colorList()}</div>`:'';
+  return `<p class="set-note">画面の書体・飾り・質感が変わります。スタンダードを選ぶと、色をさらに選べます。背景画像はどのテーマでも使えます。</p><div class="st-list" role="radiogroup" aria-label="テーマ">${STYLES.map(t=>`<button type="button" role="radio" class="st-opt${t.id===cur?' is-on':''}" aria-checked="${t.id===cur}" data-style-pick="${t.id}">${prev(t.id)}<span class="st-opt-name">${t.name}<small>${t.desc}</small><span class="ck">${icon('check')}</span></span></button>`).join('')}</div>${colors}`;
+}
+function mountStyle(s){
+  mountTheme(s);
+  $$('[data-style-pick]',s).forEach(b=>b.onclick=()=>{const id=b.dataset.stylePick;if(id===curStyle())return;applyStyle(id);setMeta('styleTheme',id);applyBg();
+    renderSettings();toast(`テーマを「${STYLES.find(t=>t.id===id).name}」にしました`);
+    if(id==='standard'){const c=$('.st-colors');if(c)c.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}});
+}
+
 /* ---------- 背景画像 ---------- */
 const BGD={bgVeil:40,bgZoom:100,bgX:50,bgY:50,bgPanel:0};
 function hexLum(h){if(!/^#[0-9a-f]{6}$/i.test(h))return null;const n=parseInt(h.slice(1),16);return (.2126*(n>>16&255)+.7152*(n>>8&255)+.0722*(n&255))/255}
@@ -1302,15 +1441,15 @@ function openTplItemForm(t,item,back){
 
 /* ---------- 設定ページ ---------- */
 const SET_GROUPS=[
-  {g:'見た目',items:[['theme','テーマカラー','grid'],['bg','背景画像','photo']]},
+  {g:'見た目',items:[['style','テーマ','sparkle'],['bg','背景画像','photo']]},
   {g:'時間',items:[['tpl','予定のテンプレート','repeat'],['free','自由時間の計算','clock']]},
   {g:'データ',items:[['export','書き出し','upload'],['import','読み込み','download']]}
 ];
 const setLabel=id=>{for(const g of SET_GROUPS)for(const [k,l] of g.items)if(k===id)return l;return '設定'};
-function themeSec(){
+function colorList(){
   const cur=state.meta.theme||'auto',order=['sage','ink','amber','cobalt','rose','night','auto'];
   const tile=t=>t.id==='auto'?`<span class="th-tile" style="background:linear-gradient(90deg,#e9ede8 50%,#1b221f 50%)"><i style="background:#285847"></i></span>`:`<span class="th-tile" style="background:${t.sw[0]}"><i style="background:${t.sw[2]}"></i></span>`;
-  return `<p class="set-note">読んだ・観たの色は、どのテーマでも緑と茶のままです。</p><div class="th-list" role="radiogroup" aria-label="テーマカラー">${order.map(id=>THEMES.find(t=>t.id===id)).map(t=>`<button type="button" role="radio" class="th-row${t.id===cur?' is-on':''}" aria-checked="${t.id===cur}" data-theme-pick="${t.id}">${tile(t)}<span class="th-name">${t.name}${t.id==='auto'?'<small>昼はセージ、夜は暗い配色</small>':''}</span><span class="ck">${icon('check')}</span></button>`).join('')}</div>`;
+  return `<div class="th-list" role="radiogroup" aria-label="スタンダードの色">${order.map(id=>THEMES.find(t=>t.id===id)).map(t=>`<button type="button" role="radio" class="th-row${t.id===cur?' is-on':''}" aria-checked="${t.id===cur}" data-theme-pick="${t.id}">${tile(t)}<span class="th-name">${t.name}${t.id==='auto'?'<small>昼はセージ、夜は暗い配色</small>':''}</span><span class="ck">${icon('check')}</span></button>`).join('')}</div>`;
 }
 function exportSec(){
   const last=state.meta.lastExport?new Date(state.meta.lastExport):null;
@@ -1351,10 +1490,10 @@ function mountImport(s){
     d.events.forEach(o=>put('events',o));d.entries.forEach(o=>put('entries',o));(d.photos||[]).forEach(p=>{state.photos.set(p.id,p);put('photos',p)});
     render();setPage(state.prevPage||'day');toast('データを読み込みました')});
 }
-const SET_SECS={theme:[themeSec,mountTheme],bg:[bgSec,mountBg],tpl:[tplSec,mountTpl],free:[freeSec,mountFree],export:[exportSec,mountExport],import:[importSec,mountImport]};
+const SET_SECS={style:[styleSec,mountStyle],bg:[bgSec,mountBg],tpl:[tplSec,mountTpl],free:[freeSec,mountFree],export:[exportSec,mountExport],import:[importSec,mountImport]};
 function renderSettings(){
   const wide=window.innerWidth>=600;state.setWide=wide;
-  if(wide&&!state.setSec)state.setSec='theme';
+  if(wide&&(!state.setSec||state.setSec==='theme'))state.setSec='style';
   const sec=state.setSec,wrap=$('#setWrap');
   wrap.dataset.sub=sec?'1':'';
   $('#setTitle').textContent=!wide&&sec?setLabel(sec):'設定';
@@ -1438,12 +1577,15 @@ $('#remList').addEventListener('click',e=>{const t=e.target.closest('[data-tf],[
 
 async function init(){
   let saved='auto';try{saved=localStorage.getItem('sd-theme')||'auto'}catch(e){}
+  let savedSt='standard';try{savedSt=localStorage.getItem('sd-style')||'standard'}catch(e){}
+  applyStyle(savedSt);
   applyTheme(saved);
   setView(state.date);render();
   idb=await openDB();
   const [ev,en,ph,meta,rms]=await Promise.all(STORES.map(getAll));
   state.events=ev;state.entries=en;state.reminders=rms;ph.forEach(p=>state.photos.set(p.id,p));meta.forEach(m=>state.meta[m.id]=m.value);
   if(state.meta.theme)applyTheme(state.meta.theme);
+  if(state.meta.styleTheme)applyStyle(state.meta.styleTheme);
   applyBg();refreshLum();
   if(!state.meta.seeded){seedSamples();setMeta('seeded',true)}
   if(!state.meta.seededRem){seedReminders();setMeta('seededRem',true)}
