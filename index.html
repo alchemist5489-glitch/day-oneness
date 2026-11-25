@@ -169,8 +169,8 @@ button{cursor:pointer;background:none;border:0;padding:0}
 @media (min-width:600px){.fab-bar{display:none}}
 
 /* シート */
-.scrim{position:fixed;inset:0;background:var(--scrim);z-index:20}
-.sheet{position:fixed;z-index:21;background:var(--surface);left:0;right:0;bottom:0;border-radius:18px 18px 0 0;max-height:88vh;overflow:auto;padding:6px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));box-shadow:0 -6px 30px rgba(0,0,0,.15)}
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:40}
+.sheet{position:fixed;z-index:41;background:var(--surface);left:0;right:0;bottom:0;border-radius:18px 18px 0 0;max-height:88vh;overflow:auto;padding:6px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));box-shadow:0 -6px 30px rgba(0,0,0,.15)}
 .sheet::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--line);margin:4px auto 6px}
 @media (min-width:600px){
   .sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:min(540px,92vw);max-height:86vh;border-radius:18px;padding:8px 22px 22px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
@@ -467,7 +467,45 @@ html.has-bgimg[data-hd="white"] .topbar .ic{filter:drop-shadow(0 1px 2px rgba(0,
 .sw{display:flex;flex:none}
 .sw i{width:18px;height:18px;border-radius:50%;border:1px solid rgba(128,128,128,.35)}
 .sw i+i{margin-left:-6px}
-.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:.85rem;font-weight:700;z-index:30;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:.85rem;font-weight:700;z-index:50;white-space:nowrap}
+/* 月間ページ（全画面） */
+.mv{position:fixed;inset:0;z-index:25;touch-action:none;user-select:none;-webkit-user-select:none;background:var(--bg);display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+html.mv-open,html.mv-open body{overflow:hidden}
+.mv-card{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;max-width:1100px;width:100%;margin:0 auto;box-shadow:0 10px 30px rgba(20,30,25,.10)}
+.mv-head{position:relative;flex:none;height:clamp(96px,17vh,190px);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px 0 20px;background:var(--accent-soft);overflow:hidden;touch-action:pan-x}
+.mv-img{position:absolute;inset:0;background-size:cover;background-position:center}
+.mv-head.has-img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,0) 60%)}
+.mv-head h2{position:relative;z-index:1;margin:0;white-space:nowrap;min-width:0;font-size:clamp(1.3rem,5.6vw,2.4rem);font-weight:700;color:var(--accent);letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.mv-head.has-img h2{color:#ffffff;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+.mv-btns{position:relative;z-index:1;display:flex;gap:8px}
+.mv-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.82);color:#1e2a24;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.mv-btn:hover{background:#ffffff}
+.mv-btn.pic{margin-right:6px}
+@media (max-width:599px){.mv-head{padding:0 10px 0 16px}.mv-btns{gap:6px}.mv-btn{width:38px;height:38px}.mv-btn .ic{width:17px;height:17px}.mv-btn.pic{margin-right:2px}}
+.mv-dow{flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.mv-dow span{text-align:center;padding:8px 0;font-weight:700;font-size:.95rem;color:var(--fg)}
+.mv-dow span:first-child{color:#c0473a}.mv-dow span:last-child{color:#3d62a0}
+.mv-grid{flex:1;min-height:0;will-change:transform;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line)}
+.mv-day{position:relative;display:block;background:var(--surface) center/cover no-repeat;text-align:left;padding:0;min-height:0;overflow:hidden;color:var(--fg)}
+button.mv-day:hover{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--accent) 40%,transparent)}
+.mv-day.is-blank{background:var(--surface-2)}
+.mv-n{position:absolute;left:6px;top:5px;font-size:clamp(.95rem,3.4vw,1.3rem);font-weight:700;line-height:1;padding:4px 6px;border-radius:8px}
+.mv-day.sun .mv-n{color:#c0473a}.mv-day.sat .mv-n{color:#3d62a0}
+.mv-day.has-photo .mv-n{background:rgba(255,255,255,.85);color:#1e2a24}
+.mv-day.is-today .mv-n{background:var(--accent);color:var(--accent-fg)}
+.mv-day.is-sel{box-shadow:inset 0 0 0 2.5px var(--accent)}
+.mv-dot{position:absolute;right:8px;top:9px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
+.mv-legend{flex:none;margin:0;display:flex;align-items:center;gap:8px;padding:12px 18px;border-top:1px solid var(--line);font-size:.86rem;color:var(--fg)}
+.mv-legend i{width:10px;height:10px;border-radius:50%;background:var(--accent);flex:none}
+html.has-bgimg .mv{background:transparent}
+html.has-bgimg .mv-card{background:color-mix(in srgb,var(--surface) var(--panel-a,100%),transparent)}
+@media (prefers-reduced-motion:no-preference){
+  .mv{animation:mvUp .32s cubic-bezier(.2,.8,.2,1)}
+  .mv.closing{animation:mvDown .26s ease-in forwards}
+}
+@keyframes mvUp{from{transform:translateY(100%)}}
+@keyframes mvDown{to{transform:translateY(100%)}}
+
 
 @media (prefers-reduced-motion:no-preference){
   .sheet{animation:up .2s ease-out}
@@ -485,7 +523,7 @@ html.has-bgimg[data-hd="white"] .topbar .ic{filter:drop-shadow(0 1px 2px rgba(0,
       <span id="hdDow" class="dow">火</span>
     </div>
     <div class="hd-actions">
-      <button class="icon-btn only-sm" id="openMonth" type="button" aria-label="月間カレンダー"></button>
+      <button class="icon-btn" id="openMonth" type="button" aria-label="月間カレンダー"></button>
       <button class="icon-btn" id="openData" type="button" aria-label="設定"></button>
     </div>
   </header>
@@ -513,6 +551,15 @@ html.has-bgimg[data-hd="white"] .topbar .ic{filter:drop-shadow(0 1px 2px rgba(0,
 
 <div class="bg-layer" id="bgLayer" hidden><div class="bg-img" id="bgImg"></div></div>
 <div class="bottom-ui"><div class="pg-dots" role="tablist" aria-label="スケジュールと記録の切り替え"><button type="button" role="tab" class="is-on" aria-selected="true" aria-label="スケジュール" data-pane="sched"></button><button type="button" role="tab" aria-selected="false" aria-label="記録" data-pane="rec"></button></div><nav class="navbar" aria-label="ページ"><button type="button" class="nav-b is-on" id="navDay" aria-label="一日のページ"></button><button type="button" class="nav-add" id="navAdd" aria-label="追加"></button><button type="button" class="nav-b" id="navRem" aria-label="ToDoリスト"></button></nav></div>
+<div class="mv" id="monthView" role="dialog" aria-modal="true" aria-labelledby="mvTitle" hidden>
+  <div class="mv-card">
+    <div class="mv-head" id="mvHead"><div class="mv-img" id="mvImg"></div><h2 id="mvTitle">月間</h2>
+      <div class="mv-btns"><button type="button" class="mv-btn pic" id="mvPic" aria-label="この月の画像"></button><button type="button" class="mv-btn" id="mvClose" aria-label="閉じる"></button></div></div>
+    <div class="mv-dow" aria-hidden="true"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
+    <div class="mv-grid" id="mvGrid"></div>
+    <p class="mv-legend"><i></i>特別な予定（予定日の翌日に消えます）</p>
+  </div>
+</div>
 <div class="scrim" id="scrim" hidden data-close></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" hidden></div>
 <div class="toast" id="toast" hidden></div>
@@ -597,7 +644,7 @@ function setMeta(k,v){state.meta[k]=v;put('meta',{id:k,value:v})}
 const alive=x=>!x.deletedAt;
 const eventsOn=d=>state.events.filter(e=>alive(e)&&e.date===d).sort((a,b)=>(a.time||'')<(b.time||'')?-1:(a.time||'')>(b.time||'')?1:0);
 const entriesOn=d=>state.entries.filter(e=>alive(e)&&e.date===d).sort((a,b)=>a.order-b.order);
-function marks(){const ev=new Set(),en=new Set();state.events.forEach(e=>alive(e)&&e.special&&ev.add(e.date));return{ev,en}}
+function marks(){const ev=new Set(),en=new Set(),t=today();state.events.forEach(e=>alive(e)&&e.special&&e.date>=t&&ev.add(e.date));return{ev,en}}
 
 function upsert(list,store,o){o.updatedAt=nowIso();if(!o.createdAt)o.createdAt=o.updatedAt;const i=list.findIndex(x=>x.id===o.id);if(i>=0)list[i]=o;else list.push(o);put(store,o)}
 function softDelete(list,store,id){const o=list.find(x=>x.id===id);if(!o)return;o.deletedAt=nowIso();o.updatedAt=o.deletedAt;put(store,o);if(store==='entries'&&o.photoId){state.photos.delete(o.photoId);hardDel('photos',o.photoId)}}
@@ -660,7 +707,7 @@ function monthHTML(){
     h+=`<button type="button" class="cal-day${s===state.date?' is-sel':''}${s===t?' is-today':''}" data-date="${s}" aria-label="${m+1}月${dd}日"><span class="num">${dd}</span>${s===t?'<span class="tdy">today</span>':''}<span class="dots">${ev.has(s)?'<i class="dot ev"></i>':''}${en.has(s)?'<i class="dot en"></i>':''}</span></button>`}
   return h+`</div><div class="cal-legend"><span><i style="background:var(--accent)"></i>特別な予定</span></div>`;
 }
-function renderMonthAll(){$('#calPane').innerHTML=monthHTML();const sc=$('#sheetCal');if(sc)sc.innerHTML=monthHTML()}
+function renderMonthAll(){$('#calPane').innerHTML=monthHTML();renderMonthView()}
 
 const endLabel=e=>e.endTime?(e.endNext?(e.endTime==='00:00'?'24:00':'翌'+e.endTime):e.endTime):'';
 const evDur=e=>{if(!e.time||!e.endTime)return 0;let d=toMin(e.endTime)-toMin(e.time);if(e.endNext)d+=1440;return Math.max(0,d)};
@@ -872,7 +919,90 @@ function compress(file,max){return new Promise((res,rej)=>{const fr=new FileRead
 
 function openPhoto(id){const p=state.photos.get(id);if(p)openSheet('添付写真',`<img class="viewer" src="${p.full}" alt="添付写真">`)}
 
-function openMonthSheet(){openSheet('月間','<div id="sheetCal"></div>',s=>{$('#sheetCal',s).innerHTML=monthHTML()})}
+/* ---------- 月間ページ（全画面） ---------- */
+const mvEl=()=>$('#monthView');
+const ymKey=()=>`${state.view.y}-${pad(state.view.m+1)}`;
+function dayPhoto(date){
+  const en=state.entries.filter(e=>alive(e)&&e.date===date&&e.photoId).sort((a,b)=>a.order-b.order);
+  for(const e of en){const p=state.photos.get(e.photoId);if(p)return p.thumb}
+  return null;
+}
+function renderMonthView(){
+  const el=mvEl();if(!el||el.hidden)return;
+  const {y,m}=state.view,first=new Date(y,m,1),lead=first.getDay(),days=new Date(y,m+1,0).getDate(),t=today(),{ev}=marks();
+  const img=state.meta['mimg-'+ymKey()];
+  $('#mvTitle').textContent=`${y}年${m+1}月`;
+  const head=$('#mvHead');head.classList.toggle('has-img',!!img);$('#mvImg').style.backgroundImage=img?`url("${img}")`:'';
+  const rows=Math.ceil((lead+days)/7);
+  let h='';
+  for(let i=0;i<lead;i++)h+='<div class="mv-day is-blank"></div>';
+  for(let d=1;d<=days;d++){const s=`${y}-${pad(m+1)}-${pad(d)}`,ph=dayPhoto(s),dw=(lead+d-1)%7;
+    h+=`<button type="button" class="mv-day${ph?' has-photo':''}${s===t?' is-today':''}${s===state.date?' is-sel':''}${dw===0?' sun':dw===6?' sat':''}" data-date="${s}" aria-label="${m+1}月${d}日${s===t?'（今日）':''}${ev.has(s)?'、特別な予定あり':''}"${ph?` style="background-image:url('${ph}')"`:''}><span class="mv-n num">${d}</span>${ev.has(s)?'<i class="mv-dot"></i>':''}</button>`}
+  for(let i=lead+days;i<rows*7;i++)h+='<div class="mv-day is-blank"></div>';
+  const g=$('#mvGrid');g.style.gridTemplateRows=`repeat(${rows},minmax(0,1fr))`;g.innerHTML=h;
+}
+let mvPushed=false,mvClosing=false;
+function openMonthView(){
+  const el=mvEl();if(!el.hidden)return;
+  setView(state.date);el.hidden=false;el.classList.remove('closing');renderMonthView();
+  document.documentElement.classList.add('mv-open');
+  try{history.pushState({mv:1},'');mvPushed=true}catch(e){mvPushed=false}
+  setTimeout(()=>{try{$('#mvClose').focus({preventScroll:true})}catch(e){}},50);
+}
+function closeMonthView(fromPop){
+  const el=mvEl();if(el.hidden||mvClosing)return;
+  if(!fromPop&&mvPushed){mvPushed=false;try{history.back();return}catch(e){}}
+  mvPushed=false;mvClosing=true;el.classList.add('closing');
+  const done=()=>{el.hidden=true;el.classList.remove('closing');mvClosing=false;document.documentElement.classList.remove('mv-open');try{$('#openMonth').focus({preventScroll:true})}catch(e){}};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)done();else setTimeout(done,260);
+}
+window.addEventListener('popstate',()=>{if(!mvEl().hidden)closeMonthView(true)});
+function openMonthImage(){
+  const has=!!state.meta['mimg-'+ymKey()],{y,m}=state.view;
+  openSheet(`${y}年${m+1}月の画像`,`<p class="hint" style="margin:0 0 14px">月の見出しに表示する画像です。月ごとに別の画像を設定できます。</p>
+    <div class="stack"><label class="btn-primary" style="cursor:pointer">${icon('photo')}${has?'画像を変える':'画像を選ぶ'}<input type="file" id="mi-file" accept="image/*" hidden></label>${has?'<button type="button" class="btn-ghost" id="mi-rm">画像を外す</button>':''}</div>`,
+  s=>{
+    $('#mi-file',s).onchange=async x=>{const f=x.target.files&&x.target.files[0];if(!f)return;try{const p=await compress(f,1600);setMeta('mimg-'+ymKey(),p.full);closeSheet();renderMonthView();toast('画像を設定しました')}catch(e){toast('この画像は読み込めませんでした')}};
+    const rm=$('#mi-rm',s);if(rm)rm.onclick=()=>{setMeta('mimg-'+ymKey(),null);closeSheet();renderMonthView();toast('画像を外しました')};
+  });
+}
+let mvAnim=false,mvSuppress=false;
+const mvReduce=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+function mvShift(n){const d=new Date(state.view.y,state.view.m+n,1);state.view={y:d.getFullYear(),m:d.getMonth()};renderMonthAll()}
+function mvSlide(n,from=0){
+  const g=$('#mvGrid');
+  if(mvAnim)return;
+  if(mvReduce()||!g.animate){g.style.transform='';mvShift(n);return}
+  mvAnim=true;const w=g.clientWidth||320;
+  const out=g.animate([{transform:`translateX(${from}px)`,opacity:1},{transform:`translateX(${-n*w*0.55}px)`,opacity:0}],{duration:160,easing:'cubic-bezier(.4,0,1,1)'});
+  g.style.transform='';
+  out.onfinish=()=>{
+    mvShift(n);
+    const inn=g.animate([{transform:`translateX(${n*w*0.55}px)`,opacity:0},{transform:'translateX(0)',opacity:1}],{duration:300,easing:'cubic-bezier(.2,.85,.25,1)'});
+    $('#mvTitle').animate([{opacity:0,transform:`translateX(${n*18}px)`},{opacity:1,transform:'translateX(0)'}],{duration:300,easing:'cubic-bezier(.2,.85,.25,1)'});
+    $('#mvImg').animate([{opacity:.25},{opacity:1}],{duration:360,easing:'ease-out'});
+    inn.onfinish=()=>{mvAnim=false};
+  };
+}
+function mountMonthView(){
+  $('#mvClose').innerHTML=icon('close');$('#mvPic').innerHTML=icon('photo');
+  $('#mvClose').onclick=()=>closeMonthView();
+  $('#mvPic').onclick=openMonthImage;
+  const card=$('.mv-card'),g=$('#mvGrid');let p=null;
+  card.addEventListener('pointerdown',e=>{if(mvAnim||e.button>0||e.target.closest('.mv-btn'))return;p={id:e.pointerId,x:e.clientX,y:e.clientY,t:performance.now(),dir:null,dx:0,head:!!e.target.closest('.mv-head')}});
+  card.addEventListener('pointermove',e=>{if(!p||e.pointerId!==p.id)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;
+    if(!p.dir){if(Math.hypot(dx,dy)<8)return;p.dir=Math.abs(dx)>Math.abs(dy)?'h':'v';if(p.dir==='h'){try{card.setPointerCapture(e.pointerId)}catch(_){}}}
+    if(p.dir==='h'){p.dx=dx;g.style.transform=`translateX(${dx}px)`;g.style.opacity=String(Math.max(.55,1-Math.abs(dx)/(g.clientWidth*1.6)))}});
+  const end=e=>{if(!p||e.pointerId!==p.id)return;const q=p;p=null;g.style.opacity='';
+    if(q.dir==='h'){mvSuppress=true;setTimeout(()=>{mvSuppress=false},0);
+      const v=Math.abs(q.dx)/Math.max(1,performance.now()-q.t);
+      if(Math.abs(q.dx)>g.clientWidth*0.18||(Math.abs(q.dx)>30&&v>0.45))mvSlide(q.dx<0?1:-1,q.dx);
+      else{g.style.transform='';if(g.animate&&!mvReduce())g.animate([{transform:`translateX(${q.dx}px)`},{transform:'translateX(0)'}],{duration:240,easing:'cubic-bezier(.2,.85,.25,1)'})}}
+    else if(q.dir==='v'&&q.head&&e.clientY-q.y>80)closeMonthView()};
+  card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end);
+  card.addEventListener('click',e=>{if(mvSuppress){e.stopPropagation();e.preventDefault()}},true);
+}
+
 
 /* ---------- テーマカラー ---------- */
 const THEMES=[
@@ -1202,7 +1332,7 @@ function mountFree(s){
   aws.onchange=saveAw;awe.onchange=saveAw;
 }
 function mountExport(s){
-  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,todoCats:state.meta.todoCats||[],schedTemplates:state.meta.schedTemplates||[],categories:CATS,photos:[...state.photos.values()]};
+  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,todoCats:state.meta.todoCats||[],schedTemplates:state.meta.schedTemplates||[],monthImages:Object.fromEntries(Object.entries(state.meta).filter(([k,v])=>k.startsWith('mimg-')&&v)),categories:CATS,photos:[...state.photos.values()]};
     const o=$('#d-out',s);o.value=JSON.stringify(data);o.hidden=false;$('#d-copy',s).hidden=false;if(window.self===window.top){const dl=$('#d-dl',s);dl.hidden=false;dl.onclick=()=>{try{const url=URL.createObjectURL(new Blob([o.value],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=`day-oneness-${today().replace(/-/g,'')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('ファイルに保存しました')}catch(e){toast('保存できませんでした。コピーを使ってください')}}}setMeta('lastExport',nowIso());renderHeader();o.select()};
   $('#d-copy',s).onclick=()=>{const o=$('#d-out',s);try{navigator.clipboard.writeText(o.value).then(()=>toast('コピーしました'),()=>{o.select();toast('選択した文字をコピーしてください')})}catch(e){o.select();toast('選択した文字をコピーしてください')}};
 }
@@ -1216,6 +1346,7 @@ function mountImport(s){
     state.reminders=Array.isArray(d.reminders)?d.reminders:[];state.reminders.forEach(o=>put('reminders',o));
     if(Array.isArray(d.todoCats))setMeta('todoCats',d.todoCats);
     if(Array.isArray(d.schedTemplates))setMeta('schedTemplates',d.schedTemplates);
+    if(d.monthImages&&typeof d.monthImages==='object')Object.entries(d.monthImages).forEach(([k,v])=>{if(k.startsWith('mimg-'))setMeta(k,v)});
     state.events=d.events;state.entries=d.entries;state.photos=new Map();
     d.events.forEach(o=>put('events',o));d.entries.forEach(o=>put('entries',o));(d.photos||[]).forEach(p=>{state.photos.set(p.id,p);put('photos',p)});
     render();setPage(state.prevPage||'day');toast('データを読み込みました')});
@@ -1246,7 +1377,7 @@ function go(d){state.date=d;setView(d);render()}
 
 $('#openData').innerHTML=icon('more');$('#openMonth').innerHTML=icon('cal');
 $$('.pane-add').forEach(b=>b.innerHTML=icon('plus')+(b.dataset.add==='event'?'追加':'記録を追加'));
-$('#openMonth').onclick=openMonthSheet;
+$('#openMonth').onclick=openMonthView;mountMonthView();
 $('#openData').onclick=openSettings;
 $('#setBack').innerHTML=icon('chevL');$('#setBack').onclick=settingsBack;
 $('#setNav').addEventListener('click',e=>{const b=e.target.closest('[data-set]');if(!b)return;state.setSec=b.dataset.set;renderSettings();if(!state.setWide)window.scrollTo(0,0)});
@@ -1258,7 +1389,7 @@ document.addEventListener('click',e=>{
   const ds=t.dataset;
   if(ds.photo!==undefined){e.stopPropagation();openPhoto(ds.photo);return}
   if(ds.mnav!==undefined){const v=state.view;const d=new Date(v.y,v.m+Number(ds.mnav),1);state.view={y:d.getFullYear(),m:d.getMonth()};renderMonthAll();return}
-  if(ds.date!==undefined){const inSheet=!!t.closest('#sheet');go(ds.date);if(inSheet)closeSheet();return}
+  if(ds.date!==undefined){const inSheet=!!t.closest('#sheet'),inMv=!!t.closest('#monthView');go(ds.date);if(inSheet)closeSheet();if(inMv){if(state.page!=='day')setPage('day');closeMonthView()}return}
   if(ds.event!==undefined){openEventActions(ds.event);return}
   if(ds.entry!==undefined){const en=state.entries.find(x=>x.id===ds.entry);if(en)openEntryForm(en.kind,en);return}
   if(ds.add!==undefined){ds.add==='event'?openEventForm():ds.add==='entry'?openEntryChooser():openAddChooser();return}
@@ -1267,6 +1398,8 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!sheet.hidden){closeSheet();return}
+  if(e.key==='Escape'&&!mvEl().hidden){closeMonthView();return}
+  if(!mvEl().hidden){if(e.key==='ArrowLeft')mvSlide(-1);if(e.key==='ArrowRight')mvSlide(1);return}
   if(e.key==='Enter'&&e.target.matches('.card[data-entry]')){e.preventDefault();e.target.click();return}
   if(!sheet.hidden&&e.key!=='Escape')return;
   if(e.key==='Escape'&&state.page==='set'&&sheet.hidden){settingsBack();return}
