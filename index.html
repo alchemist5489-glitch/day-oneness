@@ -645,10 +645,15 @@ html:root:root:root[data-style="retro"],.sp[data-sp="retro"]{
   --photo:#f6e2b8;--danger:#a3324a;--scrim:rgba(40,25,20,.38);--deco:#b9a89a;--time:#7d6b63;--hdr:#f7e2bb;
   --font-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;--r:14px;--r-sm:10px;color-scheme:light}
 html:root:root:root[data-style="moon"],.sp[data-sp="moon"]{
-  --bg:#141129;--surface:#221d3d;--surface-2:#1b1733;--line:#3b3462;--fg:#ece8ff;--muted:#a59ecb;--accent:#d8c8ff;--accent-fg:#1e1838;--accent-soft:#2e2752;
-  --read:#8fd1ae;--read-soft:#1f3a31;--watch:#f2a7b9;--watch-soft:#3d2236;--done:#aab7ff;--done-soft:#262f55;--thought:#dba9f2;--thought-soft:#352446;
-  --photo:#1c1736;--danger:#ff9a8a;--scrim:rgba(0,0,0,.55);--deco:#6f66a3;--time:#f2d58a;--hdr:#252046;
-  --font-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;--r:16px;--r-sm:12px;color-scheme:dark}
+  --bg:#0f2150;--surface:#1a3266;--surface-2:#152b5b;--line:#2e4b86;--fg:#eef2ff;--muted:#a8b5d9;--accent:#e6c67f;--accent-fg:#14244f;--accent-soft:#2a3f72;
+  --read:#8fd6b8;--read-soft:#1d4a4f;--watch:#f0a9bf;--watch-soft:#4a2c55;--done:#a9c3ff;--done-soft:#24467e;--thought:#d9c2ff;--thought-soft:#363c6a;
+  --photo:#1f3a72;--danger:#ff9e8e;--scrim:rgba(3,8,25,.6);--deco:#c9a961;--time:#e9d9b0;--hdr:#1d3a74;
+  --font-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;--r:18px;--r-sm:14px;color-scheme:dark}
+html:root:root:root[data-style="china"],.sp[data-sp="china"]{
+  --bg:#efe6d9;--surface:#fbf6ee;--surface-2:#f5ece0;--line:#e4d4bf;--fg:#4a1d14;--muted:#8b6556;--accent:#9b1c1c;--accent-fg:#fbefd6;--accent-soft:#f4ddd2;
+  --read:#3d6b52;--read-soft:#e1ebdd;--watch:#9b1c1c;--watch-soft:#f4ddd2;--done:#8a6420;--done-soft:#f3e6c7;--thought:#6a3b5c;--thought-soft:#efe0e8;
+  --photo:#efe3d2;--danger:#a3241c;--scrim:rgba(50,18,10,.4);--deco:#a8302a;--time:#5a2a1c;--hdr:#9b1c1c;
+  --font-head:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;--r:16px;--r-sm:12px;color-scheme:light}
 
 /* --- 共通：ヘッダーを箱に、見出しに区切り線 --- */
 html[data-style] .topbar{background:var(--bg)}
@@ -658,6 +663,7 @@ html[data-style] .pane-head{gap:10px}
 html[data-style] .card,html[data-style] .rem,html[data-style] .set-item,html[data-style] .th-row,html[data-style] .tpl-card{border-radius:var(--r-sm)}
 html[data-style] .pane,html[data-style] .week,html[data-style] .set-card,html[data-style] .mv-card{border-radius:var(--r)}
 html.has-bgimg[data-style]:not([data-style="fantasy"]) .topbar{background-color:transparent}
+html.has-bgimg[data-style="moon"] .topbar,html.has-bgimg[data-style="china"] .topbar{background-color:transparent!important}
 html.has-bgimg[data-style="fantasy"] .topbar{background-color:transparent;background-image:linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a),linear-gradient(#b8955a,#b8955a)}
 html.has-bgimg[data-style="cyber"] .topbar{background-image:linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--line),var(--line))}
 
@@ -697,14 +703,34 @@ html[data-style="retro"] .topbar::after{content:"";position:absolute;left:0;righ
 html[data-style="retro"] .pane-head h2::after{background:linear-gradient(var(--deco),var(--deco)) left center/calc(100% - 8px) 1px no-repeat,radial-gradient(circle,#8c3246 55%,transparent 60%) right center/8px 8px no-repeat}
 html[data-style="retro"] .nav-add,html[data-style="retro"] .btn-primary{box-shadow:0 2px 0 #5e1f2e}
 
-/* --- ムーンリット：星空と月 --- */
+/* --- ロイヤル・ノクターン：ロイヤルブルーとシャンパンゴールド --- */
 html[data-style="moon"] body{background-image:
-  radial-gradient(1px 1px at 20px 30px,#fff8 50%,transparent 51%),radial-gradient(1.2px 1.2px at 140px 80px,#fffa 50%,transparent 51%),
-  radial-gradient(1px 1px at 90px 160px,#fff6 50%,transparent 51%),radial-gradient(1.4px 1.4px at 200px 210px,#f2d58acc 50%,transparent 51%),
-  radial-gradient(1px 1px at 250px 40px,#fff7 50%,transparent 51%);background-size:280px 260px}
-html[data-style="moon"] .topbar::after{content:"✦ ☾ ✦";position:absolute;right:10px;bottom:0;font-size:.62rem;letter-spacing:.2em;color:#f2d58a;pointer-events:none}
-html[data-style="moon"] .pane-head h2::after{background:linear-gradient(var(--deco),var(--deco)) left center/calc(100% - 9px) 1px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Cpath d='M4.5 0 9 4.5 4.5 9 0 4.5z' fill='%23d8c8ff'/%3E%3C/svg%3E") right center/9px 9px no-repeat}
-html[data-style="moon"] .card,html[data-style="moon"] .pane{box-shadow:0 0 0 1px rgba(216,200,255,.04),0 8px 26px rgba(0,0,0,.25)}
+  radial-gradient(1px 1px at 20px 30px,#fff6 50%,transparent 51%),radial-gradient(1.2px 1.2px at 150px 90px,#e6c67f88 50%,transparent 51%),
+  radial-gradient(1px 1px at 90px 170px,#fff5 50%,transparent 51%),radial-gradient(1px 1px at 230px 40px,#fff4 50%,transparent 51%);background-size:300px 260px}
+html[data-style="moon"] .topbar{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Cg transform='' fill='none' stroke='%23d4b46a' stroke-width='1.2'%3E%3Cpath d='M1 17V1h16'/%3E%3Cpath d='M4 8V4h4'/%3E%3Cpath d='M5.5 5.5l1.6 1.6'/%3E%3C/g%3E%3C/svg%3E") top 6px left 4px/18px 18px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Cg transform='rotate%28180 9 9%29' fill='none' stroke='%23d4b46a' stroke-width='1.2'%3E%3Cpath d='M1 17V1h16'/%3E%3Cpath d='M4 8V4h4'/%3E%3Cpath d='M5.5 5.5l1.6 1.6'/%3E%3C/g%3E%3C/svg%3E") bottom 6px right 4px/18px 18px no-repeat,var(--bg);padding:14px 10px 18px 16px;margin-top:4px}
+html[data-style="moon"] .topbar::after{content:"";position:absolute;right:26px;bottom:6px;width:46px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='14'%3E%3Cpath d='M3 7l1.6-1.6L6.2 7 4.6 8.6z' fill='%23d4b46a'/%3E%3Cpath d='M27 2.2a5 5 0 1 0 4.2 8.6 4 4 0 1 1-4.2-8.6z' fill='%23d4b46a'/%3E%3Cpath d='M40 7l1.6-1.6L43.2 7l-1.6 1.6z' fill='%23d4b46a'/%3E%3Ccircle cx='34.5' cy='2.6' r='.9' fill='%23d4b46a'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+html[data-style="moon"] .topbar::before{content:"";position:absolute;left:50%;bottom:-6px;width:120px;height:10px;transform:translateX(-50%);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='10'%3E%3Cpath d='M0 5h50M70 5h50' stroke='%23d4b46a' stroke-width='1'/%3E%3Cpath d='M60 1l4 4-4 4-4-4z' fill='%23d4b46a'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+html[data-style="moon"] .topbar{position:sticky}
+html[data-style="moon"] .pane-head h2::after{background:linear-gradient(var(--line),var(--line)) left center/calc(100% - 9px) 1px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Cpath d='M4.5 0 9 4.5 4.5 9 0 4.5z' fill='%23d4b46a'/%3E%3C/svg%3E") right center/9px 9px no-repeat}
+html[data-style="moon"] .card,html[data-style="moon"] .rem,html[data-style="moon"] .hb-card{border-color:#33528f;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+html[data-style="moon"] .pane,html[data-style="moon"] .week{box-shadow:0 0 0 1px rgba(230,198,127,.06),0 10px 28px rgba(0,0,0,.28)}
+html[data-style="moon"] .nav-add,html[data-style="moon"] .btn-primary{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35),0 2px 10px rgba(230,198,127,.25)}
+html[data-style="moon"] .wk-day.is-sel{box-shadow:0 0 0 1px #e6c67f}
+
+/* --- 朱漆と金：朱色・象牙色・金の回紋と雲 --- */
+.sp[data-sp="china"] .sp-hd{color:#fbefd6;border-color:#d4aa5a}.sp[data-sp="china"] .sp-hd small{color:#f1d3b0}
+html[data-style="china"] .topbar{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cg transform='' fill='none' stroke='%23b8862f' stroke-width='1.3'%3E%3Cpath d='M1 21V1h20'/%3E%3Cpath d='M5 21V5h12v8H9V9h4'/%3E%3C/g%3E%3C/svg%3E") top 4px left 2px/22px 22px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cg transform='rotate%28180 11 11%29' fill='none' stroke='%23b8862f' stroke-width='1.3'%3E%3Cpath d='M1 21V1h20'/%3E%3Cpath d='M5 21V5h12v8H9V9h4'/%3E%3C/g%3E%3C/svg%3E") bottom 4px right 2px/22px 22px no-repeat,var(--bg);padding:16px 12px 16px 18px;margin-top:4px}
+html[data-style="china"] .hd-date h1{color:#8a1717}
+html[data-style="china"] .pane-head h2::after{background:linear-gradient(var(--deco),var(--deco)) left center/calc(100% - 10px) 1.5px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Cpath d='M5.5 1 10 5.5 5.5 10 1 5.5z' fill='%23fbf6ee' stroke='%23a8302a' stroke-width='1.6'/%3E%3C/svg%3E") right center/11px 11px no-repeat;height:11px}
+html[data-style="china"] .sched li{border-top:0!important;background:var(--surface-2);border-radius:10px;margin-top:6px;padding-inline:10px}
+html[data-style="china"] .card,html[data-style="china"] .rem{border-color:#ead9c2;box-shadow:0 1px 0 rgba(120,60,30,.05)}
+html[data-style="china"] .pane,html[data-style="china"] .week,html[data-style="china"] .hb-card{box-shadow:0 4px 18px rgba(110,40,20,.07)}
+html[data-style="china"] .navbar{background:#9b1c1c;border-color:#7c1414;box-shadow:inset 0 0 0 1px rgba(212,170,90,.45),0 6px 18px rgba(110,30,20,.25)}
+html[data-style="china"] .nav-b{color:#f6e4c4}
+html[data-style="china"] .nav-b.is-on{background:rgba(251,239,214,.18);color:#fff3da}
+html[data-style="china"] .nav-add{background:#fbefd6;color:#9b1c1c;box-shadow:inset 0 0 0 1.5px #d4aa5a}
+html.has-bgimg[data-style="china"] .navbar{background:#9b1c1c}
+html[data-style="china"] .wk-day.is-sel{box-shadow:inset 0 0 0 1px #d4aa5a}
 
 /* --- テーマの見本（設定画面） --- */
 .st-list{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
@@ -1289,7 +1315,8 @@ const STYLES=[
   {id:'fantasy',name:'ファンタジー',desc:'旅の手帳。紙色・深緑・古い金色'},
   {id:'cyber',name:'サイバーパンク',desc:'端末ログ。濃紺・シアン・マゼンタ'},
   {id:'retro',name:'レトロ',desc:'ミルク色・ミント・チェリー色'},
-  {id:'moon',name:'ムーンリット',desc:'夜空の紫・月明かり・淡い金色'}
+  {id:'moon',name:'ロイヤル・ノクターン',desc:'夜の宮殿。ロイヤルブルー・シャンパンゴールド'},
+  {id:'china',name:'朱漆と金',desc:'中華風。朱色・象牙色・金の回紋と雲'}
 ];
 let minchoLoaded=false;
 function loadMincho(){if(minchoLoaded)return;minchoLoaded=true;try{const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&display=swap';document.head.appendChild(l)}catch(e){}}
@@ -1297,7 +1324,7 @@ function applyStyle(id){
   if(!STYLES.some(t=>t.id===id))id='standard';
   const r=document.documentElement;
   if(id==='standard')r.removeAttribute('data-style');else r.setAttribute('data-style',id);
-  if(id==='fantasy'||id==='retro'||id==='moon')loadMincho();
+  if(id!=='standard'&&id!=='cyber')loadMincho();
   try{localStorage.setItem('sd-style',id)}catch(e){}
   try{const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',getComputedStyle(r).getPropertyValue('--bg').trim())}catch(e){}
 }
