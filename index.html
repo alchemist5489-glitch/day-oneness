@@ -322,6 +322,22 @@ html[data-page="rem"] #habPage{display:none}
 .pv{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));cursor:zoom-out}
 .pv img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
 .pv-x{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.15);color:#fff}
+.sl-auto{display:flex;flex-direction:row!important;align-items:center;gap:8px;margin:16px 0 18px;color:var(--fg)!important;font-size:.9rem!important}
+.sl-auto input{width:20px;height:20px;accent-color:var(--accent)}
+.sl-mode{max-width:260px;margin-bottom:16px}
+.sl-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--line)}
+.sl-row:first-child,.sl-head+#sl-rows .sl-row:first-child{border-top:0}
+.sl-head{border-top:0!important;padding:0 0 2px;font-size:.8rem;font-weight:700;color:var(--muted)}
+.sl-head span:not(.sl-d){flex:1;padding-left:4px}
+.sl-row>select{flex:1}
+.sl-d{width:1.6em;font-weight:700;color:var(--fg);flex:0 0 auto}
+.sl-row label{display:flex;align-items:center;gap:6px;flex:1;font-size:.82rem;font-weight:700;color:var(--muted);min-width:0}
+.sl-row select{flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 8px;font-size:.95rem;color:var(--fg);font-variant-numeric:tabular-nums}
+.sl-ic{display:inline-flex;vertical-align:-2px;margin-right:4px;color:var(--muted)}
+.sl-ic .ic{width:14px;height:14px}
+.tl-sleep{display:flex;align-items:center;gap:8px;width:calc(100% - 46px);margin:8px 0 4px 46px;padding:7px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);color:var(--fg);font-size:.86rem;text-align:left}
+.tl-sleep .ic{width:16px;height:16px;color:var(--muted)}
+.tl-sleep small{margin-left:auto;color:var(--muted);font-size:.76rem}
 .hb-imgopt{display:flex;align-items:center;gap:12px;width:100%;margin-top:8px;padding:10px 12px;border-radius:12px;border:1.5px dashed color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 7%,var(--surface));color:var(--fg);text-align:left}
 .hb-imgopt:hover{background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
 .hb-imgopt.is-on{border-style:solid;border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent)}
@@ -796,6 +812,7 @@ const ICONS={
   checklist:'<rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 9l1.4 1.4L12 8M8 15l1.4 1.4L12 14M14.5 9.5H17M14.5 15.5H17"/>',
   cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4M8 13.5h.01M12 13.5h.01M16 13.5h.01M8 17h.01M12 17h.01"/>',
   check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  moon:'<path d="M19.5 14.5A7.5 7.5 0 1 1 9.5 4.5a6 6 0 0 0 10 10z"/>',
   habit:'<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M8.5 12l2.6 2.6L20 5.5"/>',
   bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',
   chevL:'<path d="M15 6l-6 6 6 6"/>', chevR:'<path d="M9 6l6 6-6 6"/>',
@@ -871,7 +888,7 @@ function clearSamples(){
 }
 
 /* ---------- 描画 ---------- */
-function render(){autoApplyTemplates(state.date);renderHeader();renderWeek();renderNotice();renderMonthAll();renderSchedule();renderRecords();renderReminders();renderHabits()}
+function render(){autoApplyTemplates(state.date);autoApplySleep(state.date);renderHeader();renderWeek();renderNotice();renderMonthAll();renderSchedule();renderRecords();renderReminders();renderHabits()}
 
 function renderHeader(){
   const d=parse(state.date),isT=state.date===today();
@@ -920,19 +937,45 @@ function daySegs(date){
   return out.sort((a,b)=>a.s-b.s||b.en-a.en);
 }
 function unionSegs(segs){const r=[];segs.map(x=>[x.s,x.en]).sort((a,b)=>a[0]-b[0]).forEach(([s,e])=>{const l=r[r.length-1];if(l&&s<=l[1])l[1]=Math.max(l[1],e);else r.push([s,e])});return r}
-function awake(){const s=state.meta.awakeS??420,e=state.meta.awakeE??1380;return e>s?[s,e]:[420,1380]}
-function freeGaps(segs){
-  const [A,B]=awake(),g=[];let c=A;
+/* 就寝時間：毎日同じ／曜日ごと。寝る時刻は翌3:00（=27:00）まで */
+function sleepCfg(){const m=state.meta.sleep;if(m&&m.all)return m;
+  const w=state.meta.awakeS??420,b=state.meta.awakeE??1380,all={w,b:b>w?b:1380};return{auto:true,perDay:false,all,days:Array.from({length:7},()=>({...all}))}}
+function sleepFor(date){const c=sleepCfg(),d=c.perDay?(c.days[parse(date).getDay()]||c.all):c.all;return{w:+d.w,b:+d.b}}
+function awake(date){const{w,b}=sleepFor(date||state.date);return b>w?[w,Math.min(b,1440)]:[420,1380]}
+function sleepEventFor(n){
+  const b=sleepFor(n).b,nx=addDays(n,1),w=sleepFor(nx).w;
+  const ev=b<1440?{date:n,time:fromMin(b),endTime:fromMin(w),endNext:true}:(w>b-1440?{date:nx,time:fromMin(b-1440),endTime:fromMin(w),endNext:false}:null);
+  if(!ev)return null;return{...ev,title:'就寝',memo:'',special:false,sleepNight:n};
+}
+const sleepSig=e=>`${e.date}|${e.time}|${e.endTime}|${!!e.endNext}`;
+function autoApplySleep(date){
+  const c=sleepCfg();if(!c.auto||!date||date<today())return false;
+  const ap={...(state.meta.sleepApplied||{})};let ch=false;
+  [addDays(date,-1),date].forEach(n=>{if(n<addDays(today(),-1)||ap[n])return;ap[n]=true;ch=true;
+    if(state.events.some(e=>alive(e)&&e.sleepNight===n))return;const ev=sleepEventFor(n);if(!ev)return;
+    const o={id:uid(),...ev};o.sleepSig=sleepSig(o);upsert(state.events,'events',o)});
+  if(ch){const keep=addDays(today(),-7);Object.keys(ap).forEach(k=>{if(k<keep)delete ap[k]});setMeta('sleepApplied',ap)}
+  return ch;
+}
+/* 設定を変えたら、手を加えていない今日以降の就寝予定を作り直す */
+function resyncSleep(){
+  const ap={...(state.meta.sleepApplied||{})},from=today();
+  state.events.filter(e=>alive(e)&&e.sleepNight&&e.sleepNight>=from&&e.sleepSig===sleepSig(e)).forEach(e=>{softDelete(state.events,'events',e.id);delete ap[e.sleepNight]});
+  Object.keys(ap).forEach(k=>{if(k>=from&&!state.events.some(e=>alive(e)&&e.sleepNight===k))delete ap[k]});
+  setMeta('sleepApplied',ap);
+}
+function freeGaps(segs,date){
+  const [A,B]=awake(date),g=[];let c=A;
   unionSegs(segs).forEach(([s,e])=>{if(e<=A||s>=B)return;s=Math.max(s,A);e=Math.min(e,B);if(s-c>=15)g.push([c,s]);c=Math.max(c,e)});
   if(B-c>=15)g.push([c,B]);return g;
 }
 function renderSchedule(){
   const list=eventsOn(state.date),linked=new Set(state.entries.filter(alive).map(e=>e.fromEventId).filter(Boolean));
   const segs=daySegs(state.date),carry=segs.filter(x=>x.cont);
-  const busy=unionSegs(segs).reduce((a,[s,e])=>a+(e-s),0);
-  const gaps=freeGaps(segs),free=gaps.reduce((a,[s,e])=>a+(e-s),0);
+  const busy=unionSegs(segs.filter(x=>!x.e.sleepNight)).reduce((a,[s,e])=>a+(e-s),0);
+  const gaps=freeGaps(segs,state.date),free=gaps.reduce((a,[s,e])=>a+(e-s),0);
   const isT=state.date===today(),nowM=(()=>{const d=new Date();return d.getHours()*60+d.getMinutes()})();
-  const title=e=>`${e.special?'<i class="sp-dot" title="特別な予定"></i>':''}${esc(e.title)}${linked.has(e.id)?'<span class="linked">記録済み</span>':''}`;
+  const title=e=>`${e.sleepNight?`<span class="sl-ic">${icon('moon')}</span>`:''}${e.special?'<i class="sp-dot" title="特別な予定"></i>':''}${esc(e.title)}${linked.has(e.id)?'<span class="linked">記録済み</span>':''}`;
   const sum=`<p class="sum">${busy?`予定 <b>${fmtDur(busy)}</b>　`:''}自由時間 <b>${fmtDur(free)}</b></p>`;
   const tplBtn=`<button type="button" class="tpl-apply" data-tplapply>${icon('repeat')}テンプレートを入れる</button>`;
   if(!list.length&&!carry.length){$('#sched').innerHTML=`${sum}<p class="empty">予定はありません。</p>${tplBtn}`;return}
@@ -946,8 +989,9 @@ function renderSchedule(){
   const sview=`<div class="sv-s">${sum}${strip}<ul class="sched">${allday.map(e=>row(e,false)).join('')}${carry.map(x=>row(x.e,true)).join('')}${list.filter(e=>e.time).map(e=>row(e,false)).join('')}</ul></div>`;
 
   /* タブレット・PC：時間軸タイムライン（空き時間は自由時間として表示） */
-  const PX=44,[A,B]=awake();
-  const items=segs.map(x=>({...x}));
+  const PX=44,[A,B]=awake(state.date);
+  const slTop=segs.find(x=>x.e.sleepNight&&x.s<A),slBot=segs.find(x=>x.e.sleepNight&&x.s>=B&&!x.cont);
+  const items=segs.filter(x=>x!==slTop&&x!==slBot).map(x=>({...x}));
   const groups=[];let cur=[],curEnd=-1;
   items.forEach(it=>{if(cur.length&&it.s>=curEnd){groups.push(cur);cur=[];curEnd=-1}cur.push(it);curEnd=Math.max(curEnd,it.en)});if(cur.length)groups.push(cur);
   groups.forEach(g=>{const cols=[];g.forEach(it=>{let c=cols.findIndex(x=>x<=it.s);if(c<0){c=cols.length;cols.push(0)}cols[c]=it.en;it.col=c});g.forEach(it=>it.n=cols.length)});
@@ -960,7 +1004,8 @@ function renderSchedule(){
     const tm=it.cont?`00:00〜${e.endTime}`:`${e.time}${e.endTime?'〜'+endLabel(e):''}`,d=it.cont?it.en-it.s:evDur(e);
     return `<button type="button" class="tl-b${it.noend?' noend':''}${it.cont?' cont':''}${short?' short':''}" data-event="${e.id}" style="top:${top+1}px;height:${ht}px;left:calc(${it.col/it.n*100}% + 6px);width:calc(${100/it.n}% - 10px)"><b>${it.cont?'（前日から）':''}${title(e)}</b><small class="num">${tm}${d>0?'　'+fmtDur(d):''}</small></button>`}).join('');
   if(isT&&nowM>=sH*60&&nowM<=eH*60)h+=`<div class="tl-now" style="top:${(nowM-sH*60)/60*PX}px" aria-hidden="true"></div>`;
-  const tview=items.length||gaps.length?`<div class="tl" style="height:${(eH-sH)*PX}px">${h}</div>`:'';
+  const slB=(x,top)=>x?`<button type="button" class="tl-sleep" data-event="${x.e.id}">${icon('moon')}<span>${top?`起床 <b class="num">${x.e.endTime}</b>`:`就寝 <b class="num">${x.e.time}</b>`}</span><small class="num">${top?(x.cont?'前日の夜から':`${x.e.time}〜`):`〜${endLabel(x.e)}`}</small></button>`:'';
+  const tview=items.length||gaps.length?`${slB(slTop,true)}<div class="tl" style="height:${(eH-sH)*PX}px">${h}</div>${slB(slBot,false)}`:'';
   const ad=allday.length?`<div class="allday-row">${allday.map(e=>`<button type="button" class="allday-b" data-event="${e.id}"><span class="t allday">終日</span>${title(e)}</button>`).join('')}</div>`:'';
   $('#sched').innerHTML=sview+`<div class="sv-t">${sum}${ad}${tview}</div>`+tplBtn;
 }
@@ -1448,12 +1493,18 @@ function openCatManager(){
   });
 }
 
+const tLabel=m=>m>=1440?`翌${Math.floor((m-1440)/60)}:${pad(m%60)}`:`${Math.floor(m/60)}:${pad(m%60)}`;
+function tOpts(v,min,max){let o='',has=false;for(let m=min;m<=max;m+=15){if(m===v)has=true;o+=`<option value="${m}"${m===v?' selected':''}>${tLabel(m)}</option>`}return has?o:`<option value="${v}" selected>${tLabel(v)}</option>`+o}
+const slRow=(k,d,lbl)=>`<div class="sl-row"${k!=null?` data-sld="${k}"`:''}>${lbl?`<span class="sl-d">${lbl}</span>`:''}<select data-slw aria-label="${lbl?lbl+'曜日の':''}起きる時刻">${tOpts(+d.w,180,780)}</select><select data-slb aria-label="${lbl?lbl+'曜日の':''}寝る時刻">${tOpts(+d.b,1080,1620)}</select></div>`;
+const slHead=per=>`<div class="sl-row sl-head" aria-hidden="true">${per?'<span class="sl-d"></span>':''}<span>起きる</span><span>寝る</span></div>`;
 function freeSec(){
-  const [A,B]=awake(),opts=(v,min,max)=>{let o='';for(let m=min;m<=max;m+=30)o+=`<option value="${m}"${m===v?' selected':''}>${Math.floor(m/60)}:${pad(m%60)}</option>`;return o};
-  return `<div class="data-sec"><h3>自由時間の計算</h3><p>起きている時間のうち、時刻のある予定が入っていない時間を自由時間として数えます。15分未満のすき間は数えません。</p>
-    <div class="awake"><label for="aw-s">起きる</label><select id="aw-s">${opts(A,0,1410)}</select><span>〜</span><label for="aw-e">寝る</label><select id="aw-e">${opts(B,30,1440)}</select></div></div>`;
+  const c=sleepCfg();
+  return `<div class="data-sec"><p>起きる時刻と寝る時刻を決めておくと、スケジュールに「就寝」の予定が自動で入ります。自由時間は、起きてから寝るまでのうち、予定が入っていない時間で数えます（15分未満のすき間は数えません）。</p>
+    <label class="check sl-auto"><input type="checkbox" id="sl-auto"${c.auto?' checked':''}>スケジュールに自動で入れる</label>
+    <div class="seg seg-sm sl-mode" role="radiogroup" aria-label="設定のしかた"><button type="button" class="seg-b${!c.perDay?' is-on':''}" role="radio" aria-checked="${!c.perDay}" data-slmode="same">毎日同じ</button><button type="button" class="seg-b${c.perDay?' is-on':''}" role="radio" aria-checked="${c.perDay}" data-slmode="day">曜日ごと</button></div>
+    ${slHead(c.perDay)}<div id="sl-rows">${c.perDay?[0,1,2,3,4,5,6].map(i=>slRow(i,c.days[i]||c.all,WD[i])).join(''):slRow(null,c.all,'')}</div>
+    <p class="hint" style="margin:6px 0 0">変えると、手を加えていない今日以降の就寝の予定も新しい時刻に入れ替わります。予定を消した日や、時刻を直した日はそのままです。</p></div>`;
 }
-
 /* ---------- スケジュールのテンプレート ---------- */
 const WD=['日','月','火','水','木','金','土'];
 const tpls=()=>(state.meta.schedTemplates||[]).map(t=>({...t,days:[...(t.days||[])],items:(t.items||[]).map(i=>({...i}))}));
@@ -1543,7 +1594,7 @@ function openTplItemForm(t,item,back){
 /* ---------- 設定ページ ---------- */
 const SET_GROUPS=[
   {g:'見た目',items:[['style','テーマ','sparkle'],['bg','背景画像','photo']]},
-  {g:'時間',items:[['tpl','予定のテンプレート','repeat'],['free','自由時間の計算','clock']]},
+  {g:'時間',items:[['tpl','予定のテンプレート','repeat'],['free','就寝時間の設定','moon']]},
   {g:'データ',items:[['export','書き出し','upload'],['import','読み込み','download']]}
 ];
 const setLabel=id=>{for(const g of SET_GROUPS)for(const [k,l] of g.items)if(k===id)return l;return '設定'};
@@ -1566,13 +1617,17 @@ function mountTheme(s){
     $$('[data-theme-pick]',s).forEach(x=>{const on=x===b;x.classList.toggle('is-on',on);x.setAttribute('aria-checked',on)})});
 }
 function mountFree(s){
-  const aws=$('#aw-s',s),awe=$('#aw-e',s),saveAw=()=>{const a=+aws.value,b=+awe.value;
-    if(b<=a){toast('寝る時刻は起きる時刻より後にしてください');const[A,B]=awake();aws.value=A;awe.value=B;return}
-    setMeta('awakeS',a);setMeta('awakeE',b);renderSchedule();toast('自由時間の範囲を変えました')};
-  aws.onchange=saveAw;awe.onchange=saveAw;
+  const save=(c,msg)=>{setMeta('sleep',c);resyncSleep();render();if(msg)toast(msg)};
+  const read=()=>{const c=JSON.parse(JSON.stringify(sleepCfg()));
+    $$('#sl-rows .sl-row',s).forEach(r=>{const d={w:+$('[data-slw]',r).value,b:+$('[data-slb]',r).value};if(r.dataset.sld!=null)c.days[+r.dataset.sld]=d;else{c.all=d;c.days=Array.from({length:7},()=>({...d}))}});return c};
+  $('#sl-rows',s).addEventListener('change',()=>{const c=read();
+    if([...(c.perDay?c.days:[c.all])].some(d=>d.b<=d.w+60)){toast('寝る時刻は起きる時刻より後にしてください');renderSettings();return}
+    save(c,'就寝時間を変えました')});
+  $('#sl-auto',s).onchange=e=>{const c=read();c.auto=e.target.checked;save(c,c.auto?'スケジュールに自動で入れます':'自動で入れるのをやめました')};
+  $$('[data-slmode]',s).forEach(b=>b.onclick=()=>{const c=read(),per=b.dataset.slmode==='day';if(c.perDay===per)return;c.perDay=per;if(!per)c.all={...(c.days[1]||c.all)};save(c);renderSettings()});
 }
 function mountExport(s){
-  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,habits:state.habits,habitLogs:state.habitLogs,todoCats:state.meta.todoCats||[],schedTemplates:state.meta.schedTemplates||[],monthImages:Object.fromEntries(Object.entries(state.meta).filter(([k,v])=>k.startsWith('mimg-')&&v)),categories:CATS,photos:[...state.photos.values()]};
+  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,habits:state.habits,habitLogs:state.habitLogs,todoCats:state.meta.todoCats||[],schedTemplates:state.meta.schedTemplates||[],sleep:state.meta.sleep||null,monthImages:Object.fromEntries(Object.entries(state.meta).filter(([k,v])=>k.startsWith('mimg-')&&v)),categories:CATS,photos:[...state.photos.values()]};
     const o=$('#d-out',s);o.value=JSON.stringify(data);o.hidden=false;$('#d-copy',s).hidden=false;if(window.self===window.top){const dl=$('#d-dl',s);dl.hidden=false;dl.onclick=()=>{try{const url=URL.createObjectURL(new Blob([o.value],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=`day-oneness-${today().replace(/-/g,'')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('ファイルに保存しました')}catch(e){toast('保存できませんでした。コピーを使ってください')}}}setMeta('lastExport',nowIso());renderHeader();o.select()};
   $('#d-copy',s).onclick=()=>{const o=$('#d-out',s);try{navigator.clipboard.writeText(o.value).then(()=>toast('コピーしました'),()=>{o.select();toast('選択した文字をコピーしてください')})}catch(e){o.select();toast('選択した文字をコピーしてください')}};
 }
@@ -1587,6 +1642,7 @@ function mountImport(s){
     state.reminders=Array.isArray(d.reminders)?d.reminders:[];state.reminders.forEach(o=>put('reminders',o));
     if(Array.isArray(d.todoCats))setMeta('todoCats',d.todoCats);
     if(Array.isArray(d.schedTemplates))setMeta('schedTemplates',d.schedTemplates);
+    if(d.sleep&&d.sleep.all)setMeta('sleep',d.sleep);
     if(d.monthImages&&typeof d.monthImages==='object')Object.entries(d.monthImages).forEach(([k,v])=>{if(k.startsWith('mimg-'))setMeta(k,v)});
     state.events=d.events;state.entries=d.entries;state.photos=new Map();
     d.events.forEach(o=>put('events',o));d.entries.forEach(o=>put('entries',o));(d.photos||[]).forEach(p=>{state.photos.set(p.id,p);put('photos',p)});
@@ -1890,7 +1946,7 @@ async function init(){
   setView(state.date);render();
   idb=await openDB();
   const [ev,en,ph,meta,rms,hbs,hls]=await Promise.all(STORES.map(getAll));
-  state.events=ev;state.entries=en;state.reminders=rms;state.habits=hbs;state.habitLogs=hls;ph.forEach(p=>state.photos.set(p.id,p));meta.forEach(m=>state.meta[m.id]=m.value);
+  state.events=ev;state.entries=en;state.reminders=rms;state.habits=hbs;state.habitLogs=hls;ph.forEach(p=>state.photos.set(p.id,p));state.meta={};meta.forEach(m=>state.meta[m.id]=m.value);
   if(state.meta.theme)applyTheme(state.meta.theme);
   if(state.meta.styleTheme)applyStyle(state.meta.styleTheme);
   applyBg();refreshLum();
