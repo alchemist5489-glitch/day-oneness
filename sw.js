@@ -1,7 +1,7 @@
 /* Day Oneness Service Worker
    アプリ本体：ネット優先（毎回最新版を確認）。ただし圏外ならすぐ、電波が弱ければ1.5秒で保存済みの版を使う
    フォント：保存済みを先に使い、裏で更新 */
-const CACHE = 'day-oneness-v3';
+const CACHE = 'day-oneness-v4';
 const FONT_CACHE = 'day-oneness-fonts';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 

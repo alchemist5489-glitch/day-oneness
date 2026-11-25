@@ -180,7 +180,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .sheet-head h2{margin:0;font-size:1.1rem}
 .form{display:flex;flex-direction:column;gap:14px}
 .form label,.field-label{display:flex;flex-direction:column;gap:6px;font-size:.82rem;font-weight:700;color:var(--muted)}
-.form input[type=date],.form input[type=time],.form input:not([type]),.form input[type=text],.form textarea{width:100%;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:1rem;font-weight:400;color:var(--fg)}
+.form input[type=date],.form input[type=time],.form input:not([type]),.form input[type=text],.form input[type=number]:not(.num-row input),.form textarea{width:100%;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:1rem;font-weight:400;color:var(--fg)}
 .form textarea{resize:vertical;min-height:84px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .hint{margin:-6px 0 0;font-size:.78rem;color:var(--muted)}
@@ -243,7 +243,7 @@ html.has-bgimg .fab-bar{background:none}
 .pager button{flex:1;padding:8px 0;border-radius:9px;font-weight:700;font-size:.9rem;color:var(--muted)}
 .pager button.is-on{background:var(--accent-soft);color:var(--accent)}
 .pg-dots{display:none;justify-content:center;margin:0}
-@media (max-width:599px){html:not([data-page="rem"]) .pg-dots{display:flex}}
+@media (max-width:599px){html[data-page="day"] .pg-dots{display:flex}}
 .bottom-ui{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:linear-gradient(to top,var(--bg) 45%,transparent);pointer-events:none}
 .bottom-ui>*{pointer-events:auto}
 html.has-bgimg .bottom-ui{background:none}
@@ -254,6 +254,89 @@ html.has-bgimg .bottom-ui{background:none}
 .nav-b.is-on{background:var(--accent-soft);color:var(--accent)}
 .nav-add{width:92px;height:46px;border-radius:999px;display:grid;place-items:center;background:var(--accent);color:var(--accent-fg)}
 .nav-add .ic{width:22px;height:22px;stroke-width:2.1}
+
+/* 日課・習慣ページ */
+html[data-page="habit"] .week,html[data-page="habit"] #notice,html[data-page="habit"] .layout,html[data-page="habit"] #remPage{display:none!important}
+#habPage{display:none;max-width:720px;margin:0 auto}
+html[data-page="habit"] #habPage{display:block}
+html[data-page="rem"] #habPage{display:none}
+.nav-sp{width:68px;height:46px;visibility:hidden;pointer-events:none}
+.hb-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.hb-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.hb-head h2{margin:0;font-size:1.2rem;font-weight:700;font-family:var(--font-head)}
+.hb-add{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:.9rem;color:var(--accent);padding:6px 4px}
+.hb-add .ic{width:17px;height:17px}
+.hb-in{padding:14px 18px 8px}
+.hb-bar{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap}
+.hb-seg{flex:0 1 44%;min-width:0;max-width:240px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--line);gap:3px}
+.hb-seg .seg-b{border-radius:8px;padding:6px 0;border:0!important}
+.hb-nav{display:flex;align-items:center;gap:0;font-weight:700;margin-left:auto}
+.hb-nav .num{text-align:center;font-size:.95rem;white-space:nowrap}
+.hb-nav .icon-btn{width:30px;height:36px}
+.hb-cap{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:.8rem;font-weight:700;color:var(--muted);margin:12px 0 6px}
+.hb-today{margin-right:auto;font-size:.78rem;font-weight:700;color:var(--accent);padding:3px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+.hb-list{display:flex;flex-direction:column}
+.hb-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start;padding:14px 0;border-top:1px solid var(--line)}
+.hb-list .hb-row:first-child{border-top:0;padding-top:6px}
+.hb-icbtn{display:block;border-radius:16px}
+.hb-row .hb-ic{width:76px;height:76px;border-radius:16px}
+.hb-row .hb-ic .ic{width:40px;height:40px;stroke-width:1.7}
+.hb-body{display:flex;flex-direction:column;gap:10px;min-width:0;padding-top:2px}
+.hb-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;text-align:left;color:var(--fg);min-width:0}
+.hb-top b{font-size:1.08rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb-top .num{color:var(--hc);font-weight:700;font-size:.95rem;white-space:nowrap}
+.hb-prog{display:block;height:7px;border-radius:99px;background:color-mix(in srgb,var(--fg) 7%,var(--surface-2));overflow:hidden}
+.hb-prog i{display:block;height:100%;border-radius:inherit;background:var(--hc);transition:width .35s}
+.hb-act{display:flex;justify-content:flex-end;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.hb-act .hb-grid{margin-right:auto}
+.hb-btn{min-width:118px;height:38px;padding:0 14px;border-radius:10px;font-weight:700;font-size:.9rem;background:var(--surface);color:var(--fg);border:1px solid var(--line);white-space:nowrap;box-shadow:0 1px 2px rgba(20,30,25,.05)}
+.hb-btn:hover{border-color:var(--hc)}
+.hb-btn.is-done{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 18%,transparent);box-shadow:none}
+.hb-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto;background:color-mix(in srgb,var(--hc) 15%,var(--surface));color:var(--hc);overflow:hidden}
+.hb-ic .ic{width:24px;height:24px}
+.hb-ic.is-img img{width:100%;height:100%;object-fit:cover;display:block}
+.hb-grid{display:grid;grid-template-columns:repeat(7,16px);gap:4px}
+.hb-grid i{height:16px;border-radius:4px;background:color-mix(in srgb,var(--hc) 10%,var(--surface-2))}
+.hb-grid i.e{background:none}
+.hb-grid i.on{background:var(--hc)}
+.hb-grid i.td{box-shadow:0 0 0 1.5px var(--fg)}
+@media (min-width:600px){.hb-row .hb-ic{width:88px;height:88px}.hb-row .hb-ic .ic{width:44px;height:44px}.hb-in{padding:16px 22px 10px}.hb-head{padding:16px 22px}}
+@media (max-width:380px){.hb-row{gap:12px}.hb-row .hb-ic{width:64px;height:64px}.hb-row .hb-ic .ic{width:34px;height:34px}.hb-btn{min-width:100px}}
+.hb-dhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.hb-dhead b{display:block;font-size:1.05rem}
+.hb-dhead small{color:var(--muted)}
+.hb-logs{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.hb-log{display:grid;grid-template-columns:6.5em minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 10px;border-top:1px solid var(--line);font-size:.92rem}
+.hb-log:first-child{border-top:0}
+.hb-log small{display:block;color:var(--muted);font-size:.78rem}
+.hb-log .hb-del{padding:5px 10px;font-size:.8rem}
+.hb-prev{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px dashed var(--line);border-radius:var(--r-sm)}
+.hb-icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px}
+.hb-ipick{height:44px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.hb-ipick .ic{width:22px;height:22px}
+.hb-ipick.is-on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.hb-imgopt{display:flex;align-items:center;gap:12px;width:100%;margin-top:8px;padding:10px 12px;border-radius:12px;border:1.5px dashed color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 7%,var(--surface));color:var(--fg);text-align:left}
+.hb-imgopt:hover{background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
+.hb-imgopt.is-on{border-style:solid;border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent)}
+.hb-imgth{width:44px;height:44px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden;background:var(--accent);color:var(--accent-fg)}
+.hb-imgth .ic{width:22px;height:22px}
+.hb-imgth img{width:100%;height:100%;object-fit:cover;display:block}
+.hb-imgtx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hb-imgtx b{font-size:.92rem;color:var(--accent)}
+.hb-imgtx small{font-size:.78rem;font-weight:400;color:var(--muted)}
+.hb-crop{display:flex;gap:14px;align-items:center;margin-top:8px}
+.hb-cropbox{width:150px;height:150px;flex:0 0 auto;border-radius:22px;overflow:hidden;position:relative;background:var(--surface-2);border:1px solid var(--line);touch-action:none;cursor:grab;user-select:none}
+.hb-cropbox:active{cursor:grabbing}
+.hb-cropbox img{position:absolute;left:0;top:0;max-width:none;pointer-events:none;-webkit-user-drag:none}
+.hb-cropside{display:flex;flex-direction:column;gap:10px;min-width:0}
+.form label.hb-imgbtn,.hb-imgbtn{display:inline-flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;padding:9px 12px;font-weight:700;cursor:pointer;font-size:.88rem;color:var(--fg)}
+.hb-imgbtn .ic{width:18px;height:18px}
+.hb-colors{display:flex;gap:10px;flex-wrap:wrap;padding:2px}
+.hb-pick{display:flex;align-items:center;gap:12px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);text-align:left;color:var(--fg)}
+.hb-pick small{margin-left:auto;color:var(--muted)}
+.hb-pick .hb-ic{width:36px;height:36px;border-radius:10px}
+.hb-pick .hb-ic .ic{width:20px;height:20px}
+.ev-hab{display:inline-flex;align-items:center;gap:3px;font-size:.78rem;font-weight:700;color:var(--accent);margin-top:6px}
 /* ページ切り替え：一日のページ / ToDo */
 html[data-page="rem"] .week,html[data-page="rem"] #notice,html[data-page="rem"] .layout{display:none!important}
 #remPage{display:none;max-width:720px;margin:0 auto}
@@ -315,7 +398,7 @@ html[data-page="rem"] #remPage{display:block}
 /* 設定ページ */
 #setPage{display:none}
 html[data-page="set"] #setPage{display:block}
-html[data-page="set"] .topbar,html[data-page="set"] .week,html[data-page="set"] #notice,html[data-page="set"] .layout,html[data-page="set"] #remPage,html[data-page="set"] .bottom-ui{display:none!important}
+html[data-page="set"] .topbar,html[data-page="set"] .week,html[data-page="set"] #notice,html[data-page="set"] .layout,html[data-page="set"] #remPage,html[data-page="set"] #habPage,html[data-page="set"] .bottom-ui{display:none!important}
 .set-card{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:calc(100vh - 28px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
 .set-head{display:flex;align-items:center;gap:4px;padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--line)}
 .set-head h1{margin:0;font-size:1.45rem;font-weight:700}
@@ -576,7 +659,7 @@ html[data-style="cyber"] .card::before{content:"";position:absolute;left:0;top:1
 html[data-style="cyber"] .sched .t,html[data-style="cyber"] .tl-b small,html[data-style="cyber"] .hd-date h1{font-family:ui-monospace,"Roboto Mono","Droid Sans Mono",monospace;letter-spacing:.02em}
 html[data-style="cyber"] .hd-date h1{text-shadow:0 0 12px rgba(124,242,226,.35)}
 html[data-style="cyber"] .navbar{border-radius:4px;box-shadow:0 0 0 1px rgba(124,242,226,.12),0 8px 24px rgba(0,0,0,.4)}
-html[data-style="cyber"] .nav-b,html[data-style="cyber"] .nav-add{border-radius:3px}
+html[data-style="cyber"] .nav-b,html[data-style="cyber"] .hb-ic,html[data-style="cyber"] .nav-add{border-radius:3px}
 html[data-style="cyber"] .nav-add{clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));box-shadow:0 0 14px rgba(124,242,226,.45)}
 html[data-style="cyber"] .wk-day.is-sel{box-shadow:0 0 12px rgba(124,242,226,.5)}
 html[data-style="cyber"] .chip{border-radius:2px}
@@ -647,6 +730,7 @@ html[data-style="moon"] .card,html[data-style="moon"] .pane{box-shadow:0 0 0 1px
       <div id="records"></div>
     </section>
   </main>
+  <section id="habPage" aria-label="日課・習慣"><div id="habList"></div></section>
   <section id="remPage" aria-label="ToDoリスト"><div id="remList"></div></section>
   <section id="setPage" aria-labelledby="setTitle">
     <div class="set-card"><div class="set-head"><button type="button" class="icon-btn" id="setBack" aria-label="戻る"></button><h1 id="setTitle">設定</h1></div>
@@ -655,7 +739,7 @@ html[data-style="moon"] .card,html[data-style="moon"] .pane{box-shadow:0 0 0 1px
 </div>
 
 <div class="bg-layer" id="bgLayer" hidden><div class="bg-img" id="bgImg"></div></div>
-<div class="bottom-ui"><div class="pg-dots" role="tablist" aria-label="スケジュールと記録の切り替え"><button type="button" role="tab" class="is-on" aria-selected="true" aria-label="スケジュール" data-pane="sched"></button><button type="button" role="tab" aria-selected="false" aria-label="記録" data-pane="rec"></button></div><nav class="navbar" aria-label="ページ"><button type="button" class="nav-b is-on" id="navDay" aria-label="一日のページ"></button><button type="button" class="nav-add" id="navAdd" aria-label="追加"></button><button type="button" class="nav-b" id="navRem" aria-label="ToDoリスト"></button></nav></div>
+<div class="bottom-ui"><div class="pg-dots" role="tablist" aria-label="スケジュールと記録の切り替え"><button type="button" role="tab" class="is-on" aria-selected="true" aria-label="スケジュール" data-pane="sched"></button><button type="button" role="tab" aria-selected="false" aria-label="記録" data-pane="rec"></button></div><nav class="navbar" aria-label="ページ"><button type="button" class="nav-b" id="navHab" aria-label="日課・習慣"></button><button type="button" class="nav-b is-on" id="navDay" aria-label="一日のページ"></button><button type="button" class="nav-add" id="navAdd" aria-label="追加"></button><button type="button" class="nav-b" id="navRem" aria-label="ToDoリスト"></button><span class="nav-sp" aria-hidden="true"></span></nav></div>
 <div class="mv" id="monthView" role="dialog" aria-modal="true" aria-labelledby="mvTitle" hidden>
   <div class="mv-card">
     <div class="mv-head" id="mvHead"><div class="mv-img" id="mvImg"></div><h2 id="mvTitle">月間</h2>
@@ -705,6 +789,7 @@ const ICONS={
   checklist:'<rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 9l1.4 1.4L12 8M8 15l1.4 1.4L12 14M14.5 9.5H17M14.5 15.5H17"/>',
   cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4M8 13.5h.01M12 13.5h.01M16 13.5h.01M8 17h.01M12 17h.01"/>',
   check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  habit:'<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M8.5 12l2.6 2.6L20 5.5"/>',
   bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',
   chevL:'<path d="M15 6l-6 6 6 6"/>', chevR:'<path d="M9 6l6 6-6 6"/>',
   plus:'<path d="M12 5v14M5 12h14"/>', close:'<path d="M6 6l12 12M18 6L6 18"/>',
@@ -732,10 +817,10 @@ const KINDS={
 const isMedia=k=>k==='read'||k==='watched';
 
 /* ---------- 保存（IndexedDB） ---------- */
-const STORES=['events','entries','photos','meta','reminders'];
+const STORES=['events','entries','photos','meta','reminders','habits','habitLogs'];
 let idb=null;
 function openDB(){return new Promise(res=>{try{
-  const r=indexedDB.open('schedule-diary',2);
+  const r=indexedDB.open('schedule-diary',3);
   r.onupgradeneeded=()=>{const d=r.result;STORES.forEach(s=>{if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:'id'})})};
   r.onsuccess=()=>res(r.result); r.onerror=()=>res(null); r.onblocked=()=>res(null);
 }catch(e){res(null)}})}
@@ -744,7 +829,7 @@ function put(s,o){if(!idb)return;try{idb.transaction(s,'readwrite').objectStore(
 function hardDel(s,id){if(!idb)return;try{idb.transaction(s,'readwrite').objectStore(s).delete(id)}catch(e){}}
 function clearStore(s){return new Promise(res=>{if(!idb)return res();try{const q=idb.transaction(s,'readwrite').objectStore(s).clear();q.onsuccess=()=>res();q.onerror=()=>res()}catch(e){res()}})}
 
-const state={date:today(),view:null,events:[],entries:[],reminders:[],photos:new Map(),meta:{},page:'day',showDone:false,todoFilter:'all'};
+const state={date:today(),view:null,events:[],entries:[],reminders:[],habits:[],habitLogs:[],habView:'week',habAnchor:null,photos:new Map(),meta:{},page:'day',showDone:false,todoFilter:'all'};
 function setView(d){const x=parse(d);state.view={y:x.getFullYear(),m:x.getMonth()}}
 function setMeta(k,v){state.meta[k]=v;put('meta',{id:k,value:v})}
 const alive=x=>!x.deletedAt;
@@ -773,17 +858,19 @@ function clearSamples(){
   state.events.filter(e=>e.sample&&alive(e)).forEach(e=>softDelete(state.events,'events',e.id));
   state.entries.filter(e=>e.sample&&alive(e)).forEach(e=>softDelete(state.entries,'entries',e.id));
   state.reminders.filter(e=>e.sample&&alive(e)).forEach(e=>softDelete(state.reminders,'reminders',e.id));
+  state.habits.filter(e=>e.sample&&alive(e)).forEach(e=>softDelete(state.habits,'habits',e.id));
+  state.habitLogs.filter(e=>e.sample&&alive(e)).forEach(e=>softDelete(state.habitLogs,'habitLogs',e.id));
   render();toast('サンプルを消しました');
 }
 
 /* ---------- 描画 ---------- */
-function render(){autoApplyTemplates(state.date);renderHeader();renderWeek();renderNotice();renderMonthAll();renderSchedule();renderRecords();renderReminders()}
+function render(){autoApplyTemplates(state.date);renderHeader();renderWeek();renderNotice();renderMonthAll();renderSchedule();renderRecords();renderReminders();renderHabits()}
 
 function renderHeader(){
   const d=parse(state.date),isT=state.date===today();
-  const rem=state.page==='rem';$('#openMonth').hidden=rem;
-  $('#hdDate').textContent=rem?'ToDo':`${d.getMonth()+1}月${d.getDate()}日`;
-  $('#hdDow').textContent=rem?'':DOW[d.getDay()];
+  const pg=state.page,other=pg==='rem'||pg==='habit';$('#openMonth').hidden=other;
+  $('#hdDate').textContent=pg==='rem'?'ToDo':pg==='habit'?'':`${d.getMonth()+1}月${d.getDate()}日`;
+  $('#hdDow').textContent=other?'':DOW[d.getDay()];
   $('#recH').textContent=isT?'今日の記録':`${d.getMonth()+1}/${d.getDate()}の記録`;
   const last=state.meta.lastExport,real=state.entries.some(e=>alive(e)&&!e.sample)||state.events.some(e=>alive(e)&&!e.sample);
   const stale=!last||(Date.now()-new Date(last).getTime())>14*864e5;
@@ -971,9 +1058,10 @@ function openEventForm(ev,pre){
 function openEventActions(id){
   const e=state.events.find(x=>x.id===id);if(!e)return;const d=parse(e.date);
   const td=e.fromTodoId?state.reminders.find(x=>x.id===e.fromTodoId&&alive(x)):null;
-  openSheet(`${d.getMonth()+1}月${d.getDate()}日 ${e.time?e.time+(e.endTime?'〜'+endLabel(e):''):'終日'}`,`<div class="ev-detail"><p class="big">${esc(e.title)}</p>${e.memo?`<p>${esc(e.memo)}</p>`:''}</div>
-    <div class="stack"><button type="button" class="btn-primary" id="a-rec">${icon('plus')}記録にする</button><button type="button" class="btn-ghost" id="a-edit">編集する</button>${td?(td.done?'<p class="hint" style="margin:4px 0 0;text-align:center">もとのToDoは完了済みです</p>':`<button type="button" class="btn-ghost" id="a-todo">${icon('check')}ToDoも完了にする</button>`):''}</div>`,
-  s=>{$('#a-edit',s).onclick=()=>openEventForm(e);
+  const hl=[...new Set(state.habitLogs.filter(l=>alive(l)&&l.fromEventId===e.id).map(l=>l.habitId))].map(i=>state.habits.find(h=>h.id===i&&alive(h))).filter(Boolean);
+  openSheet(`${d.getMonth()+1}月${d.getDate()}日 ${e.time?e.time+(e.endTime?'〜'+endLabel(e):''):'終日'}`,`<div class="ev-detail"><p class="big">${esc(e.title)}</p>${e.memo?`<p>${esc(e.memo)}</p>`:''}${hl.length?`<span class="ev-hab">${icon('habit')}日課済み：${hl.map(h=>esc(h.name)).join('・')}</span>`:''}</div>
+    <div class="stack"><button type="button" class="btn-primary" id="a-rec">${icon('plus')}記録にする</button><button type="button" class="btn-ghost" id="a-hab">${icon('habit')}日課に記録</button><button type="button" class="btn-ghost" id="a-edit">編集する</button>${td?(td.done?'<p class="hint" style="margin:4px 0 0;text-align:center">もとのToDoは完了済みです</p>':`<button type="button" class="btn-ghost" id="a-todo">${icon('check')}ToDoも完了にする</button>`):''}</div>`,
+  s=>{$('#a-edit',s).onclick=()=>openEventForm(e);$('#a-hab',s).onclick=()=>openHabFromEvent(e);
     const at=$('#a-todo',s);if(at)at.onclick=()=>{td.done=true;td.doneAt=nowIso();upsert(state.reminders,'reminders',td);closeSheet();render();toast('ToDoを完了にしました')};
     $('#a-rec',s).onclick=()=>openSheet('どの記録にしますか',`<p class="hint" style="margin:0 0 12px">「${esc(e.title)}」を引き継いで記録を書きます。</p><div class="choice-grid">${kindChoices('pick')}</div>`,
       s2=>$$('[data-pick]',s2).forEach(b=>b.onclick=()=>openEntryForm(b.dataset.pick,null,{date:e.date,title:e.title,fromEventId:e.id})))});
@@ -1471,7 +1559,7 @@ function mountFree(s){
   aws.onchange=saveAw;awe.onchange=saveAw;
 }
 function mountExport(s){
-  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,todoCats:state.meta.todoCats||[],schedTemplates:state.meta.schedTemplates||[],monthImages:Object.fromEntries(Object.entries(state.meta).filter(([k,v])=>k.startsWith('mimg-')&&v)),categories:CATS,photos:[...state.photos.values()]};
+  $('#d-exp',s).onclick=()=>{const data={app:'schedule-diary',version:1,exportedAt:nowIso(),events:state.events,entries:state.entries,reminders:state.reminders,habits:state.habits,habitLogs:state.habitLogs,todoCats:state.meta.todoCats||[],schedTemplates:state.meta.schedTemplates||[],monthImages:Object.fromEntries(Object.entries(state.meta).filter(([k,v])=>k.startsWith('mimg-')&&v)),categories:CATS,photos:[...state.photos.values()]};
     const o=$('#d-out',s);o.value=JSON.stringify(data);o.hidden=false;$('#d-copy',s).hidden=false;if(window.self===window.top){const dl=$('#d-dl',s);dl.hidden=false;dl.onclick=()=>{try{const url=URL.createObjectURL(new Blob([o.value],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=`day-oneness-${today().replace(/-/g,'')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('ファイルに保存しました')}catch(e){toast('保存できませんでした。コピーを使ってください')}}}setMeta('lastExport',nowIso());renderHeader();o.select()};
   $('#d-copy',s).onclick=()=>{const o=$('#d-out',s);try{navigator.clipboard.writeText(o.value).then(()=>toast('コピーしました'),()=>{o.select();toast('選択した文字をコピーしてください')})}catch(e){o.select();toast('選択した文字をコピーしてください')}};
 }
@@ -1481,7 +1569,8 @@ function mountImport(s){
   imp.addEventListener('click',async()=>{let d;try{d=JSON.parse($('#d-in',s).value)}catch(e){toast('データの形式が正しくありません');return}
     if(!d||d.app!=='schedule-diary'||!Array.isArray(d.events)||!Array.isArray(d.entries)){toast('このアプリのデータではありません');return}
     if(!imp.classList.contains('armed')){imp.classList.add('armed');imp.textContent='もう一度押して置き換え';return}
-    await Promise.all(['events','entries','photos','reminders'].map(clearStore));
+    await Promise.all(['events','entries','photos','reminders','habits','habitLogs'].map(clearStore));
+    state.habits=Array.isArray(d.habits)?d.habits:[];state.habits.forEach(o=>put('habits',o));state.habitLogs=Array.isArray(d.habitLogs)?d.habitLogs:[];state.habitLogs.forEach(o=>put('habitLogs',o));
     state.reminders=Array.isArray(d.reminders)?d.reminders:[];state.reminders.forEach(o=>put('reminders',o));
     if(Array.isArray(d.todoCats))setMeta('todoCats',d.todoCats);
     if(Array.isArray(d.schedTemplates))setMeta('schedTemplates',d.schedTemplates);
@@ -1569,18 +1658,210 @@ function setPane(p){
 })();
 $$('.pg-dots [data-pane]').forEach(b=>b.onclick=()=>setPane(b.dataset.pane));
 
+/* ---------- 日課・習慣 ---------- */
+const HAB_ICONS=[
+  ['walk','散歩','<path d="M4 16.5V12l3-3 2.5 2.5L12 9l1.5 2.5L20 14a1.5 1.5 0 0 1 1 1.4v1.1z"/><path d="M4 19.5h17"/><path d="M10 12.5l1.2 1M12.6 12l1.2 1"/>'],
+  ['gym','筋トレ','<path d="M7 7v10M17 7v10M4 9.5v5M20 9.5v5M7 12h10"/>'],
+  ['book','読書','<path d="M3 6c3-1 6-1 9 1 3-2 6-2 9-1v12c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 7v12"/>'],
+  ['lang','勉強・語学','<rect x="4" y="6.5" width="11" height="14" rx="2"/><path d="M9 3.5h9a2 2 0 0 1 2 2v11.5"/><path d="M7 17l2.5-6 2.5 6M7.9 15h3.2"/>'],
+  ['create','創作','<path d="M4 20l1-4L15.5 5.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M13.5 7.5l3 3"/><path d="M19 2.5v3M17.5 4h3"/>'],
+  ['water','水を飲む','<path d="M6 4h12l-1.5 16h-9z"/><path d="M6.8 10c1.7-1 3.5 1 5.2 0s3.5-1 5.2 0"/>'],
+  ['sleep','早寝','<path d="M19.5 14.5A7.5 7.5 0 1 1 9.5 4.5a6 6 0 0 0 10 10z"/><path d="M17 3.5v3M15.5 5h3"/>'],
+  ['diary','日記','<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 3.5v17M11.5 8.5h4.5M11.5 11.5h4.5"/>'],
+  ['game','ゲーム','<path d="M7 8h10a4 4 0 0 1 4 4v1.5a3 3 0 0 1-5.4 1.8L14.5 14h-5l-1.1 1.3A3 3 0 0 1 3 13.5V12a4 4 0 0 1 4-4z"/><path d="M8 10.5v3M6.5 12h3M15.5 11h.01M17.5 12.5h.01"/>'],
+  ['sunrise','早起き','<path d="M4 18h16M7 18a5 5 0 0 1 10 0M12 4v4M5.6 9.6l1.8 1.8M18.4 9.6l-1.8 1.8M8.5 21h7"/>'],
+  ['stretch','ストレッチ','<circle cx="12" cy="4.5" r="1.8"/><path d="M4.5 9.5l7.5 1.5 7.5-1.5M12 11v4.5l-3.5 5M12 15.5l3.5 5"/>'],
+  ['meditate','瞑想','<circle cx="12" cy="5" r="1.8"/><path d="M12 8v5M7 11.5l5 1.5 5-1.5M4 19.5c2-3 5-4 8-4s6 1 8 4z"/>'],
+  ['cook','料理','<circle cx="10" cy="13" r="6"/><path d="M16 11.5h5.5"/><path d="M8 12h.01M11 14.5h.01"/>'],
+  ['clean','掃除','<path d="M14.5 3l-3 9"/><path d="M7 12h8.5l2 8.5H5z"/><path d="M9.5 16v4.5M13 16v4.5"/>'],
+  ['music','音楽・楽器','<path d="M9 18V5l10-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/>'],
+  ['film','映画・アニメ','<rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M4 10l15-4 1 3.5M8.5 8.8l1.8-3.2M13.5 7.5l1.8-3.2"/>']
+];
+const HAB_COLORS=[['green','#3d7a5c'],['teal','#2a8781'],['blue','#3d62a0'],['indigo','#4a52a8'],['purple','#7a55a8'],['orange','#a4602a'],['rose','#b04a6a'],['gray','#6b736e']];
+const HAB_KINDS={check:{label:'日数',unit:'日',hint:'1日1回、やったかどうかを記録'},count:{label:'回数',unit:'回',hint:'押すたびに＋1。1日に何回でも'},amount:{label:'量',unit:'ページ',hint:'ページ数や分など、数を入れて記録'}};
+const hcol=id=>(HAB_COLORS.find(c=>c[0]===id)||HAB_COLORS[0])[1];
+const habIcon=h=>h.iconType==='image'&&h.image?`<span class="hb-ic is-img" style="--hc:${hcol(h.color)}"><img src="${h.image}" alt=""></span>`:`<span class="hb-ic" style="--hc:${hcol(h.color)}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${(HAB_ICONS.find(i=>i[0]===h.icon)||HAB_ICONS[0])[2]}</svg></span>`;
+const habits=()=>state.habits.filter(alive).sort((a,b)=>(a.order||0)-(b.order||0));
+const habLogs=(h,from,to)=>state.habitLogs.filter(l=>alive(l)&&l.habitId===h.id&&l.date>=from&&l.date<=to);
+const habVal=(h,logs)=>h.kind==='check'?new Set(logs.map(l=>l.date)).size:logs.reduce((a,l)=>a+(+l.amount||0),0);
+const fmtNum=n=>Number.isInteger(n)?String(n):String(Math.round(n*10)/10);
+function habRange(){
+  const a=parse(state.habAnchor||today());
+  if(state.habView==='month'){const f=new Date(a.getFullYear(),a.getMonth(),1),t=new Date(a.getFullYear(),a.getMonth()+1,0);return{from:ymd(f),to:ymd(t),days:t.getDate(),label:`${f.getFullYear()}年${f.getMonth()+1}月`}}
+  const f=parse(addDays(ymd(a),-a.getDay())),t=parse(addDays(ymd(f),6));
+  return{from:ymd(f),to:ymd(t),days:7,label:`${f.getMonth()+1}/${f.getDate()}〜${t.getMonth()+1}/${t.getDate()}`};
+}
+function habTarget(h,r){
+  const base=+h.target||0;if(!base)return 0;
+  if(state.habView==='month')return h.period==='month'?base:Math.max(1,Math.round(base*r.days/7));
+  if(h.period==='month'){const a=parse(r.from),dim=new Date(a.getFullYear(),a.getMonth()+1,0).getDate();return Math.max(1,Math.round(base*7/dim))}
+  return base;
+}
+function addHabLog(h,date,amount,extra={}){upsert(state.habitLogs,'habitLogs',{id:uid(),habitId:h.id,date,amount:amount,...extra})}
+function renderHabits(){
+  const el=$('#habList');if(!el)return;
+  const r=habRange(),t=today(),list=habits(),mon=state.habView==='month';
+  const isCur=mon?r.from.slice(0,7)===t.slice(0,7):(t>=r.from&&t<=r.to);
+  let h=`<div class="hb-card"><div class="hb-head"><h2>日課・習慣</h2><button type="button" class="hb-add" data-hadd>${icon('plus')}習慣を追加</button></div><div class="hb-in">
+    <div class="hb-bar"><div class="seg hb-seg" role="radiogroup" aria-label="表示する期間"><button type="button" class="seg-b${!mon?' is-on':''}" role="radio" aria-checked="${!mon}" data-hview="week">1週間</button><button type="button" class="seg-b${mon?' is-on':''}" role="radio" aria-checked="${mon}" data-hview="month">1か月</button></div>
+    <div class="hb-nav"><button type="button" class="icon-btn" data-hnav="-1" aria-label="前へ">${icon('chevL')}</button><span class="num">${r.label}</span><button type="button" class="icon-btn" data-hnav="1" aria-label="次へ">${icon('chevR')}</button></div></div>
+    <p class="hb-cap">${isCur?'':`<button type="button" class="hb-today" data-hnav="0">${mon?'今月':'今週'}へ戻る</button>`}<span>${isCur?(mon?'今月の進捗':'今週の進捗'):'この期間の進捗'}</span></p>`;
+  if(list.some(x=>x.sample))h+=`<div class="notice"><span>サンプルの日課を表示しています。</span><button type="button" data-clear-samples>サンプルを消す</button></div>`;
+  if(!list.length){el.innerHTML=h+`<p class="empty">日課はまだありません。「習慣を追加」から作れます。</p></div></div>`;return}
+  h+=`<div class="hb-list">`+list.map(x=>{
+    const logs=habLogs(x,r.from,r.to),v=habVal(x,logs),tg=habTarget(x,r),pct=tg?Math.min(100,v/tg*100):Math.min(100,v*10),unit=esc(x.unit||HAB_KINDS[x.kind].unit);
+    const doneToday=x.kind==='check'&&state.habitLogs.some(l=>alive(l)&&l.habitId===x.id&&l.date===t);
+    const btn=x.kind==='check'?(doneToday?`<button type="button" class="hb-btn is-done" data-hact="${x.id}">✓ 記録済み</button>`:`<button type="button" class="hb-btn" data-hact="${x.id}">記録する</button>`):x.kind==='count'?`<button type="button" class="hb-btn" data-hact="${x.id}">＋1${unit}</button>`:`<button type="button" class="hb-btn" data-hact="${x.id}">記録する</button>`;
+    let grid='';
+    if(mon){const byDay=new Set(logs.map(l=>l.date));let g='';const lead=parse(r.from).getDay();for(let i=0;i<lead;i++)g+='<i class="e"></i>';for(let d=1;d<=r.days;d++){const s=`${r.from.slice(0,8)}${pad(d)}`;g+=`<i class="${byDay.has(s)?'on':''}${s===t?' td':''}"></i>`}grid=`<div class="hb-grid" aria-hidden="true">${g}</div>`}
+    return `<div class="hb-row" style="--hc:${hcol(x.color)}"><button type="button" class="hb-icbtn" data-hab="${x.id}" aria-label="${esc(x.name)}の記録を見る">${habIcon(x)}</button>
+      <div class="hb-body"><button type="button" class="hb-top" data-hab="${x.id}"><b>${esc(x.name)}</b><span class="num">${fmtNum(v)}${tg?`/${tg}`:''}${unit}</span></button>
+      <span class="hb-prog" role="img" aria-label="${tg?'目標の'+Math.round(pct)+'%':''}"><i style="width:${pct}%"></i></span><div class="hb-act">${grid}${btn}</div></div></div>`}).join('')+`</div></div></div>`;
+  el.innerHTML=h;
+}
+function habAct(id){
+  const x=state.habits.find(h=>h.id===id);if(!x)return;const t=today(),unit=x.unit||HAB_KINDS[x.kind].unit;
+  if(x.kind==='check'){const l=state.habitLogs.find(l=>alive(l)&&l.habitId===x.id&&l.date===t);
+    if(l){softDelete(state.habitLogs,'habitLogs',l.id);renderHabits();renderSchedule();toast(`今日の「${x.name}」を取り消しました`);return}
+    addHabLog(x,t,1);renderHabits();toast(`「${x.name}」を記録しました`);return}
+  if(x.kind==='count'){addHabLog(x,t,1);renderHabits();toast(`「${x.name}」＋1${unit}`);return}
+  openHabAmount(x,t);
+}
+function openHabAmount(x,date,pre,extra,after){
+  const unit=x.unit||HAB_KINDS[x.kind].unit;
+  openSheet(`${esc(x.name)}を記録`,`<form class="form" id="haForm" novalidate><label>日付<input id="ha-date" type="date" value="${date}"></label>
+    <label>${esc(unit)}<input id="ha-n" type="number" inputmode="decimal" min="0" step="any" value="${pre??''}" placeholder="例：20"></label>
+    <div class="form-actions"><span class="spacer"></span><button type="button" class="btn-ghost" data-close>キャンセル</button><button type="submit" class="btn-primary">記録</button></div></form>`,
+  s=>{$('#haForm',s).onsubmit=e=>{e.preventDefault();const n=parseFloat($('#ha-n',s).value);if(!(n>0)){$('#ha-n',s).focus();toast('数を入れてください');return}
+    addHabLog(x,$('#ha-date',s).value||date,n,extra||{});closeSheet();renderHabits();renderSchedule();toast(`「${x.name}」${fmtNum(n)}${unit}を記録しました`);if(after)after()}});
+}
+function openHabDetail(id){
+  const x=state.habits.find(h=>h.id===id);if(!x)return;const r=habRange(),unit=x.unit||HAB_KINDS[x.kind].unit;
+  const logs=habLogs(x,r.from,r.to).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:String(b.createdAt).localeCompare(String(a.createdAt)));
+  const k=HAB_KINDS[x.kind],tgt=x.target?`${x.period==='month'?'1か月':'1週間'}に${x.target}${esc(unit)}`:'目標なし';
+  openSheet(esc(x.name),`<div class="hb-dhead">${habIcon(x)}<div><b>${esc(x.name)}</b><small>${k.label}で記録・${tgt}</small></div></div>
+    <p class="group-label" style="margin-top:4px">${r.label}の記録</p>
+    <div class="hb-logs">${logs.length?logs.map(l=>{const d=parse(l.date);const ev=l.fromEventId&&state.events.find(e=>e.id===l.fromEventId);return `<div class="hb-log"><span class="num">${d.getMonth()+1}/${d.getDate()}（${DOW[d.getDay()]}）</span><span>${x.kind==='check'?'やった':fmtNum(+l.amount)+esc(unit)}${ev?`<small>予定「${esc(ev.title)}」から</small>`:''}</span><button type="button" class="btn-danger hb-del" data-ldel="${l.id}">取り消す</button></div>`}).join(''):'<p class="empty" style="padding:8px 4px">この期間の記録はありません。</p>'}</div>
+    <div class="stack" style="margin-top:14px"><button type="button" class="btn-ghost" id="hd-other">${icon('cal')}別の日に記録する</button><button type="button" class="btn-ghost" id="hd-edit">日課を編集する</button></div>`,
+  s=>{
+    $$('[data-ldel]',s).forEach(b=>armDelete(b,()=>{softDelete(state.habitLogs,'habitLogs',b.dataset.ldel);renderHabits();renderSchedule();openHabDetail(id);toast('記録を取り消しました')}));
+    $('#hd-edit',s).onclick=()=>openHabitForm(x);
+    $('#hd-other',s).onclick=()=>{if(x.kind==='amount')return openHabAmount(x,today());
+      openSheet(`${esc(x.name)}を記録`,`<form class="form" id="hoForm" novalidate><label>日付<input id="ho-date" type="date" value="${today()}"></label><div class="form-actions"><span class="spacer"></span><button type="button" class="btn-ghost" data-close>キャンセル</button><button type="submit" class="btn-primary">記録</button></div></form>`,
+      s2=>{$('#hoForm',s2).onsubmit=e=>{e.preventDefault();const d=$('#ho-date',s2).value;if(!d)return;
+        if(x.kind==='check'&&state.habitLogs.some(l=>alive(l)&&l.habitId===x.id&&l.date===d)){toast('その日はすでに記録済みです');return}
+        addHabLog(x,d,1);closeSheet();renderHabits();toast('記録しました')}})};
+  });
+}
+/* アイコン画像：ドラッグで位置、ピンチ・ホイールで拡大して正方形に切り抜く */
+function loadImg(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=src})}
+function cropRender(im,c,size){
+  const cv=document.createElement('canvas');cv.width=cv.height=size;const g=cv.getContext('2d');
+  const base=Math.max(size/im.width,size/im.height),W=im.width*base*c.z,H=im.height*base*c.z;
+  g.drawImage(im,-(W-size)*c.fx,-(H-size)*c.fy,W,H);return cv.toDataURL('image/jpeg',.88);
+}
+function mountCrop(box,getIm,c,onEnd){
+  const img=box.querySelector('img'),pts=new Map();let st=null;
+  const B=()=>box.clientWidth||200,dims=()=>{const im=getIm(),b=B(),base=Math.max(b/im.width,b/im.height);return{b,W:im.width*base*c.z,H:im.height*base*c.z}};
+  const draw=()=>{if(!getIm())return;const{b,W,H}=dims();img.style.width=W+'px';img.style.height=H+'px';img.style.transform=`translate(${-(W-b)*c.fx}px,${-(H-b)*c.fy}px)`};
+  const cl=v=>Math.min(1,Math.max(0,v));
+  const zoomTo=(z,px,py)=>{const{b,W,H}=dims(),ix=(W-b)*c.fx+px,iy=(H-b)*c.fy+py;c.z=Math.min(5,Math.max(1,z));const d=dims();
+    c.fx=d.W>d.b?cl((ix*d.W/W-px)/(d.W-d.b)):.5;c.fy=d.H>d.b?cl((iy*d.H/H-py)/(d.H-d.b)):.5;draw()};
+  const rel=e=>{const r=box.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  box.addEventListener('pointerdown',e=>{box.setPointerCapture(e.pointerId);pts.set(e.pointerId,rel(e));st=null;e.preventDefault()});
+  box.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId)||!getIm())return;const prev=pts.get(e.pointerId),now=rel(e);
+    if(pts.size===1){const{b,W,H}=dims();if(W>b)c.fx=cl(c.fx-(now[0]-prev[0])/(W-b));if(H>b)c.fy=cl(c.fy-(now[1]-prev[1])/(H-b));pts.set(e.pointerId,now);draw();return}
+    pts.set(e.pointerId,now);const[a,b2]=[...pts.values()],dist=Math.hypot(a[0]-b2[0],a[1]-b2[1]),mid=[(a[0]+b2[0])/2,(a[1]+b2[1])/2];
+    if(!st){st={d:dist,z:c.z};return}zoomTo(st.z*dist/st.d,mid[0],mid[1])});
+  const up=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);st=null;if(!pts.size&&onEnd)onEnd()};
+  box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);
+  box.addEventListener('wheel',e=>{e.preventDefault();if(!getIm())return;const[x,y]=rel(e);zoomTo(c.z*(e.deltaY<0?1.1:1/1.1),x,y);clearTimeout(box._wt);box._wt=setTimeout(()=>onEnd&&onEnd(),250)},{passive:false});
+  draw();return draw;
+}
+function openHabitForm(src){
+  const isNew=!src,x=src?{...src}:{id:uid(),name:'',iconType:'preset',icon:'gym',image:null,color:'green',kind:'count',unit:'回',target:3,period:'week',order:Date.now()};
+  openSheet(isNew?'日課を追加':'日課を編集',`<form class="form" id="hbForm" novalidate>
+    <div class="hb-prev" id="hf-prev"></div>
+    <label>名前<input id="hf-name" type="text" maxlength="30" value="${esc(x.name)}" placeholder="例：筋トレ"></label>
+    <div class="field-label">アイコン<div class="hb-icons" role="radiogroup" aria-label="アイコン">${HAB_ICONS.map(i=>`<button type="button" class="hb-ipick" role="radio" data-hicon="${i[0]}" aria-label="${i[1]}" title="${i[1]}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${i[2]}</svg></button>`).join('')}</div>
+    <button type="button" class="hb-imgopt hb-iimg" id="hf-imgpick" role="radio" aria-label="好きな画像を使う"><span class="hb-imgth" id="hf-imgth"></span><span class="hb-imgtx"><b>好きな画像を使う</b><small id="hf-imgsub">写真やイラストをアイコンにできます</small></span></button>
+    <div class="hb-crop" id="hf-crop" hidden><div class="hb-cropbox" id="hf-cropbox"><img alt="" draggable="false"></div><div class="hb-cropside"><p class="hint" style="margin:0;font-weight:400">ドラッグで位置、2本指（PCはホイール）で拡大できます。</p><label class="btn-ghost hb-imgbtn">${icon('photo')}<span id="hf-imglbl">画像を選ぶ</span><input type="file" id="hf-img" accept="image/*" hidden></label></div></div></div>
+    <div class="field-label">色<div class="hb-colors" role="radiogroup" aria-label="色">${HAB_COLORS.map(c=>`<button type="button" class="sw-b" role="radio" data-hcol="${c[0]}" aria-label="${c[0]}" style="background:${c[1]}"></button>`).join('')}</div></div>
+    <div class="field-label">記録のしかた<div class="seg" role="radiogroup" aria-label="記録のしかた">${Object.entries(HAB_KINDS).map(([k,v])=>`<button type="button" class="seg-b" role="radio" data-hkind="${k}">${v.label}</button>`).join('')}</div><p class="hint" id="hf-kh" style="margin:2px 0 0;font-weight:400"></p></div>
+    <div class="row2"><label>単位<input id="hf-unit" type="text" maxlength="8" value="${esc(x.unit||'')}"></label><label>目標（任意）<input id="hf-target" type="number" inputmode="decimal" min="0" step="any" value="${x.target||''}"></label></div>
+    <div class="field-label">目標の期間<div class="seg" role="radiogroup" aria-label="目標の期間"><button type="button" class="seg-b" role="radio" data-hper="week">1週間に</button><button type="button" class="seg-b" role="radio" data-hper="month">1か月に</button></div></div>
+    <div class="form-actions">${isNew?'':'<button type="button" class="btn-danger" id="hf-del">削除</button>'}<span class="spacer"></span><button type="button" class="btn-ghost" data-close>キャンセル</button><button type="submit" class="btn-primary">保存</button></div></form>`,
+  s=>{
+    const sync=()=>{
+      $$('[data-hicon]',s).forEach(b=>{const on=x.iconType==='preset'&&b.dataset.hicon===x.icon;b.classList.toggle('is-on',on);b.setAttribute('aria-checked',on)});
+      $('.hb-iimg',s).classList.toggle('is-on',x.iconType==='image');$('.hb-iimg',s).setAttribute('aria-checked',x.iconType==='image');$('#hf-crop',s).hidden=x.iconType!=='image';$('#hf-imglbl',s).textContent=x.imageSrc||x.image?'画像を変える':'画像を選ぶ';$('#hf-imgth',s).innerHTML=x.image?`<img src="${x.image}" alt="">`:icon('photo');$('#hf-imgsub',s).textContent=x.iconType==='image'?'使用中・下の枠で位置と大きさを調整':x.image?'押すとこの画像に切り替えます':'写真やイラストをアイコンにできます';
+      $$('[data-hcol]',s).forEach(b=>{const on=b.dataset.hcol===x.color;b.classList.toggle('is-on',on);b.setAttribute('aria-checked',on)});
+      $$('[data-hkind]',s).forEach(b=>{const on=b.dataset.hkind===x.kind;b.classList.toggle('is-on',on);b.setAttribute('aria-checked',on)});
+      $$('[data-hper]',s).forEach(b=>{const on=b.dataset.hper===x.period;b.classList.toggle('is-on',on);b.setAttribute('aria-checked',on)});
+      $('#hf-kh',s).textContent=HAB_KINDS[x.kind].hint;
+      $('#hf-unit',s).disabled=x.kind==='check';
+      $('#hf-prev',s).innerHTML=habIcon(x)+`<b>${esc($('#hf-name',s).value||'日課の名前')}</b>`;
+    };
+    sync();$('#hf-name',s).addEventListener('input',sync);
+    $$('[data-hicon]',s).forEach(b=>b.onclick=()=>{x.iconType='preset';x.icon=b.dataset.hicon;const n=$('#hf-name',s);if(!n.value.trim())n.value=(HAB_ICONS.find(i=>i[0]===x.icon)||[])[1]||'';sync()});
+    x.crop=x.crop?{...x.crop}:{z:1,fx:.5,fy:.5};const cbox=$('#hf-cropbox',s),cimg=$('img',cbox);let cim=null,redraw=null;
+    const bake=()=>{if(cim){x.image=cropRender(cim,x.crop,256);sync()}};
+    const useSrc=async src=>{const im=await loadImg(src);cim=im;cimg.src=src;if(!redraw)redraw=mountCrop(cbox,()=>cim,x.crop,bake);redraw();bake()};
+    $('#hf-imgpick',s).onclick=()=>{if(x.imageSrc||x.image){x.iconType='image';sync();if(!cim)useSrc(x.imageSrc||x.image).catch(()=>{});else redraw()}else $('#hf-img',s).click()};
+    $('#hf-img',s).onchange=async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;e.target.value='';
+      try{const p=await compress(f,900);x.imageSrc=p.full;Object.assign(x.crop,{z:1,fx:.5,fy:.5});x.iconType='image';sync();await useSrc(x.imageSrc)}catch(err){toast('この画像は読み込めませんでした')}};
+    if(x.iconType==='image'&&(x.imageSrc||x.image))setTimeout(()=>useSrc(x.imageSrc||x.image).catch(()=>{}),0);
+    $$('[data-hcol]',s).forEach(b=>b.onclick=()=>{x.color=b.dataset.hcol;sync()});
+    $$('[data-hkind]',s).forEach(b=>b.onclick=()=>{const prev=HAB_KINDS[x.kind].unit;x.kind=b.dataset.hkind;const u=$('#hf-unit',s);if(!u.value||u.value===prev||x.kind==='check')u.value=HAB_KINDS[x.kind].unit;sync()});
+    $$('[data-hper]',s).forEach(b=>b.onclick=()=>{x.period=b.dataset.hper;sync()});
+    $('#hbForm',s).onsubmit=e=>{e.preventDefault();const name=$('#hf-name',s).value.trim();if(!name){$('#hf-name',s).focus();toast('名前を入れてください');return}
+      x.name=name;x.unit=x.kind==='check'?'日':($('#hf-unit',s).value.trim()||HAB_KINDS[x.kind].unit);const tg=parseFloat($('#hf-target',s).value);x.target=tg>0?tg:0;delete x.sample;
+      upsert(state.habits,'habits',x);closeSheet();renderHabits();toast(isNew?'日課を追加しました':'日課を保存しました')};
+    const d=$('#hf-del',s);if(d)armDelete(d,()=>{softDelete(state.habits,'habits',x.id);state.habitLogs.filter(l=>alive(l)&&l.habitId===x.id).forEach(l=>softDelete(state.habitLogs,'habitLogs',l.id));closeSheet();renderHabits();toast('日課を削除しました')});
+  });
+}
+/* 予定から日課に記録（手動） */
+function habMatch(title){const t=(title||'').replace(/\s/g,'');return habits().map(h=>({h,s:t&&(t.includes(h.name)||h.name.includes(t))?1:0})).sort((a,b)=>b.s-a.s).map(o=>o.h)}
+function recordFromEvent(e,x){
+  const exist=state.habitLogs.some(l=>alive(l)&&l.fromEventId===e.id&&l.habitId===x.id);
+  if(exist){toast(`この予定はすでに「${x.name}」に記録済みです`);return}
+  if(x.kind==='check'&&state.habitLogs.some(l=>alive(l)&&l.habitId===x.id&&l.date===e.date)){toast(`${parse(e.date).getDate()}日の「${x.name}」はすでに記録済みです`);return}
+  if(x.kind==='amount'){const u=x.unit||'';const pre=/分/.test(u)&&evDur(e)>0?evDur(e):(/時間/.test(u)&&evDur(e)>0?Math.round(evDur(e)/6)/10:null);openHabAmount(x,e.date,pre,{fromEventId:e.id});return}
+  addHabLog(x,e.date,1,{fromEventId:e.id});closeSheet();renderHabits();renderSchedule();toast(`「${x.name}」に記録しました`);
+}
+function openHabFromEvent(e){
+  const list=habMatch(e.title);
+  if(!list.length){openSheet('日課に記録',`<p class="hint" style="margin:0 0 14px">日課はまだありません。日課のページの＋から作れます。</p>`);return}
+  openSheet('どの日課に記録しますか',`<p class="hint" style="margin:0 0 12px">「${esc(e.title)}」を${parse(e.date).getMonth()+1}月${parse(e.date).getDate()}日の記録として付けます。</p><div class="stack">${list.map(x=>`<button type="button" class="hb-pick" data-hpick="${x.id}" style="--hc:${hcol(x.color)}">${habIcon(x)}<b>${esc(x.name)}</b><small>${HAB_KINDS[x.kind].label}</small></button>`).join('')}</div>`,
+  s=>$$('[data-hpick]',s).forEach(b=>b.onclick=()=>recordFromEvent(e,state.habits.find(h=>h.id===b.dataset.hpick))));
+}
+function seedHabits(){
+  const t=today(),wk=addDays(t,-parse(t).getDay());
+  let o=Date.now();const mk=(name,icon,color,kind,unit,target)=>{const h={id:uid(),name,iconType:'preset',icon,image:null,color,kind,unit,target,period:'week',order:o++,sample:true};upsert(state.habits,'habits',h);return h};
+  const g=mk('筋トレ','gym','green','count','回',3),c=mk('創作','create','orange','check','日',5),b=mk('読書','book','blue','amount','ページ',50),m=mk('ゲーム','game','purple','count','面',2);
+  const L=(h,d,a)=>{if(d<=t)addHabLog(h,d,a,{sample:true})};
+  L(g,wk,1);L(g,addDays(wk,2),1);L(c,wk,1);L(c,addDays(wk,1),1);L(c,t,1);L(b,addDays(wk,1),12);L(b,addDays(wk,3),12);L(m,addDays(wk,2),1);
+}
+
 /* 下部のページ切り替えバー */
 document.documentElement.dataset.page='day';
-$('#navDay').innerHTML=icon('cal');$('#navRem').innerHTML=icon('checklist');$('#navAdd').innerHTML=icon('plus');
+$('#navHab').innerHTML=icon('habit');$('#navDay').innerHTML=icon('cal');$('#navRem').innerHTML=icon('checklist');$('#navAdd').innerHTML=icon('plus');
 function setPage(p){
   if(state.page===p){if(p==='day'&&state.date!==today())go(today());return}
   state.page=p;document.documentElement.dataset.page=p;
-  [['navDay','day'],['navRem','rem']].forEach(([id,v])=>{const b=$('#'+id),on=v===p;b.classList.toggle('is-on',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  [['navHab','habit'],['navDay','day'],['navRem','rem']].forEach(([id,v])=>{const b=$('#'+id),on=v===p;b.classList.toggle('is-on',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   renderHeader();window.scrollTo(0,0);
 }
 $('#navDay').onclick=()=>setPage('day');
 $('#navRem').onclick=()=>setPage('rem');
-$('#navAdd').onclick=()=>{if(state.page==='rem')return openReminderForm();if(window.innerWidth<600)return main.dataset.show==='rec'?openEntryChooser():openEventForm();openAddChooser()};
+$('#navHab').onclick=()=>setPage('habit');
+$('#navAdd').onclick=()=>{if(state.page==='rem')return openReminderForm();if(state.page==='habit')return openHabitForm();if(window.innerWidth<600)return main.dataset.show==='rec'?openEntryChooser():openEventForm();openAddChooser()};
+$('#habList').addEventListener('click',e=>{const t=e.target.closest('[data-hview],[data-hnav],[data-hact],[data-hab],[data-hadd]');if(!t)return;const ds=t.dataset;
+  if(ds.hadd!==undefined){openHabitForm();return}
+  if(ds.hview){state.habView=ds.hview;renderHabits();return}
+  if(ds.hnav!==undefined){const n=+ds.hnav,a=parse(state.habAnchor||today());if(n===0)state.habAnchor=null;else if(state.habView==='month')state.habAnchor=ymd(new Date(a.getFullYear(),a.getMonth()+n,1));else state.habAnchor=addDays(ymd(a),7*n);renderHabits();return}
+  if(ds.hact){habAct(ds.hact);return}
+  if(ds.hab)openHabDetail(ds.hab)});
 $('#remList').addEventListener('click',e=>{const t=e.target.closest('[data-tf],[data-catedit],[data-rem-toggle],[data-rem],[data-rem-done]');if(!t)return;
   if(t.dataset.tf){state.todoFilter=t.dataset.tf;renderReminders();return}
   if(t.dataset.catedit!==undefined){openCatManager();return}
@@ -1595,13 +1876,14 @@ async function init(){
   applyTheme(saved);
   setView(state.date);render();
   idb=await openDB();
-  const [ev,en,ph,meta,rms]=await Promise.all(STORES.map(getAll));
-  state.events=ev;state.entries=en;state.reminders=rms;ph.forEach(p=>state.photos.set(p.id,p));meta.forEach(m=>state.meta[m.id]=m.value);
+  const [ev,en,ph,meta,rms,hbs,hls]=await Promise.all(STORES.map(getAll));
+  state.events=ev;state.entries=en;state.reminders=rms;state.habits=hbs;state.habitLogs=hls;ph.forEach(p=>state.photos.set(p.id,p));meta.forEach(m=>state.meta[m.id]=m.value);
   if(state.meta.theme)applyTheme(state.meta.theme);
   if(state.meta.styleTheme)applyStyle(state.meta.styleTheme);
   applyBg();refreshLum();
   if(!state.meta.seeded){seedSamples();setMeta('seeded',true)}
   if(!state.meta.seededRem){seedReminders();setMeta('seededRem',true)}
+  if(!state.meta.seededHab){seedHabits();setMeta('seededHab',true)}
   ensureTodoCats();
   try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(()=>{})}catch(e){}
   render();
