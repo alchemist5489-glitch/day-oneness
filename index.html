@@ -397,12 +397,12 @@ html.has-bgimg .tf:not(.is-on){background:color-mix(in srgb,var(--surface) var(-
 .pg-dots button::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.4;transition:opacity .2s,background .2s}
 .pg-dots button.is-on::after{background:var(--fg);opacity:.9}
 @media (max-width:599px){
-  .layout[data-show="sched"] [data-pane-id="rec"],.layout[data-show="rec"] [data-pane-id="sched"]{display:none}
-  .layout .pane{min-height:55vh}
+  .app{overflow-x:clip}
+  .layout{--idx:0;--px:0px;grid-template-columns:repeat(2,100%);column-gap:max(16px,env(safe-area-inset-left,0px));touch-action:pan-y}
+  .layout>[data-pane-id]{min-height:55vh;transform:translate3d(calc(var(--idx) * (-100% - max(16px,env(safe-area-inset-left,0px))) + var(--px)),0,0);will-change:transform;transition:transform .34s cubic-bezier(.2,.85,.25,1)}
+  .layout.dragging>[data-pane-id]{transition:none}
 }
-@media (prefers-reduced-motion:no-preference){.pane.slide-l{animation:slL .22s ease-out}.pane.slide-r{animation:slR .22s ease-out}}
-@keyframes slL{from{transform:translateX(28px);opacity:.3}}
-@keyframes slR{from{transform:translateX(-28px);opacity:.3}}
+@media (prefers-reduced-motion:reduce){.layout>[data-pane-id]{transition:none!important}}
 /* スケジュールの見せ方：スマホ=帯＋一覧、タブレット・PC=タイムライン */
 .sv-t{display:none}
 @media (min-width:600px){.sv-s{display:none}.sv-t{display:block}}
@@ -1546,14 +1546,27 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'&&!e.target.closest('.sched,.week,.cal-grid'))go(addDays(state.date,-1));
   if(e.key==='ArrowRight'&&!e.target.closest('.sched,.week,.cal-grid'))go(addDays(state.date,1));
 });
-let sx=0,sy=0;const main=$('.layout');
-main.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});
-main.addEventListener('touchend',e=>{if(window.innerWidth>=600||state.page!=='day')return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>60&&Math.abs(dy)<50)setPane(dx<0?'rec':'sched')},{passive:true});
+const main=$('.layout');
 function setPane(p){
+  main.style.setProperty('--idx',p==='rec'?'1':'0');main.style.setProperty('--px','0px');
   if(main.dataset.show===p)return;main.dataset.show=p;
   $$('.pg-dots [data-pane]').forEach(b=>{const on=b.dataset.pane===p;b.classList.toggle('is-on',on);b.setAttribute('aria-selected',on)});
-  const el=$(`[data-pane-id="${p}"]`);el.classList.remove('slide-l','slide-r');void el.offsetWidth;el.classList.add(p==='rec'?'slide-l':'slide-r');
 }
+/* スマホ：スケジュール↔記録を指に追従してめくる */
+(()=>{let d=null,suppress=false;
+  main.addEventListener('pointerdown',e=>{if(window.innerWidth>=600||state.page!=='day'||!sheet.hidden||e.button>0)return;d={id:e.pointerId,x:e.clientX,y:e.clientY,t:performance.now(),dir:null,dx:0}});
+  main.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;
+    if(!d.dir){if(Math.hypot(dx,dy)<8)return;d.dir=Math.abs(dx)>Math.abs(dy)*1.2?'h':'v';if(d.dir==='h'){main.classList.add('dragging');try{main.setPointerCapture(e.pointerId)}catch(_){}}}
+    if(d.dir!=='h')return;const atEdge=(main.dataset.show==='sched'&&dx>0)||(main.dataset.show==='rec'&&dx<0);
+    d.dx=atEdge?dx*.25:dx;main.style.setProperty('--px',d.dx+'px')});
+  const end=e=>{if(!d||e.pointerId!==d.id)return;const q=d;d=null;if(q.dir!=='h')return;
+    suppress=true;setTimeout(()=>{suppress=false},0);main.classList.remove('dragging');
+    const w=main.clientWidth||360,v=Math.abs(q.dx)/Math.max(1,performance.now()-q.t);
+    let p=main.dataset.show;if(Math.abs(q.dx)>w*.2||(Math.abs(q.dx)>30&&v>.45))p=q.dx<0?'rec':'sched';
+    setPane(p)};
+  main.addEventListener('pointerup',end);main.addEventListener('pointercancel',end);
+  main.addEventListener('click',e=>{if(suppress){e.stopPropagation();e.preventDefault()}},true);
+})();
 $$('.pg-dots [data-pane]').forEach(b=>b.onclick=()=>setPane(b.dataset.pane));
 
 /* 下部のページ切り替えバー */
