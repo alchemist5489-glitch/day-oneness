@@ -58,7 +58,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .num{font-variant-numeric:tabular-nums}
 
-.app{position:relative;z-index:1;max-width:1440px;margin:0 auto;min-height:calc(100vh + 1px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 calc(118px + env(safe-area-inset-bottom,0px))}
+.app{overflow-x:clip;position:relative;z-index:1;max-width:1440px;margin:0 auto;min-height:calc(100vh + 1px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 calc(118px + env(safe-area-inset-bottom,0px))}
 @media (min-width:600px){.app{padding-block:0 100px}}
 
 /* ヘッダー */
@@ -256,10 +256,14 @@ html.has-bgimg .bottom-ui{background:none}
 .nav-add .ic{width:22px;height:22px;stroke-width:2.1}
 
 /* 日課・習慣ページ */
-html[data-page="habit"] .week,html[data-page="habit"] #notice,html[data-page="habit"] .layout,html[data-page="habit"] #remPage{display:none!important}
-#habPage{display:none;max-width:720px;margin:0 auto}
-html[data-page="habit"] #habPage{display:block}
-html[data-page="rem"] #habPage{display:none}
+/* ページ全体を左右にめくる：日課｜一日｜ToDo */
+.app{touch-action:pan-y}
+.pages{--pi:1;--pdx:0px;--pg-gap:max(16px,env(safe-area-inset-left,0px));display:grid;grid-template-columns:repeat(3,100%);column-gap:var(--pg-gap);align-items:start;touch-action:pan-y}
+.pg{min-width:0;transform:translate3d(calc(var(--pi) * (-100% - var(--pg-gap)) + var(--pdx)),var(--py,0px),0);transition:transform .34s cubic-bezier(.2,.85,.25,1)}
+.pages.dragging>.pg{transition:none}
+.pages.dragging,.layout.dragging{user-select:none;-webkit-user-select:none}
+.pg:not(.is-cur):not(.peek){visibility:hidden;max-height:0;overflow:hidden}
+#habList,#remList{max-width:720px;margin:0 auto}
 .nav-sp{width:68px;height:46px;visibility:hidden;pointer-events:none}
 .hb-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .hb-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:var(--surface-2);border-bottom:1px solid var(--line)}
@@ -361,9 +365,7 @@ html[data-page="rem"] #habPage{display:none}
 .hb-pick .hb-ic .ic{width:20px;height:20px}
 .ev-hab{display:inline-flex;align-items:center;gap:3px;font-size:.78rem;font-weight:700;color:var(--accent);margin-top:6px}
 /* ページ切り替え：一日のページ / ToDo */
-html[data-page="rem"] .week,html[data-page="rem"] #notice,html[data-page="rem"] .layout{display:none!important}
-#remPage{display:none;max-width:720px;margin:0 auto}
-html[data-page="rem"] #remPage{display:block}
+
 .rem-sec h2{font-size:1.02rem;font-weight:700;margin:20px 4px 8px}
 .rem-sec:first-child h2,.notice+.rem-sec h2{margin-top:4px}
 .rem-list{display:flex;flex-direction:column;gap:8px}
@@ -421,7 +423,7 @@ html[data-page="rem"] #remPage{display:block}
 /* 設定ページ */
 #setPage{display:none}
 html[data-page="set"] #setPage{display:block}
-html[data-page="set"] .topbar,html[data-page="set"] .week,html[data-page="set"] #notice,html[data-page="set"] .layout,html[data-page="set"] #remPage,html[data-page="set"] #habPage,html[data-page="set"] .bottom-ui{display:none!important}
+html[data-page="set"] .topbar,html[data-page="set"] #pages,html[data-page="set"] .bottom-ui{display:none!important}
 .set-card{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:calc(100vh - 28px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
 .set-head{display:flex;align-items:center;gap:4px;padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--line)}
 .set-head h1{margin:0;font-size:1.45rem;font-weight:700}
@@ -503,8 +505,7 @@ html.has-bgimg .tf:not(.is-on){background:color-mix(in srgb,var(--surface) var(-
 .pg-dots button::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.4;transition:opacity .2s,background .2s}
 .pg-dots button.is-on::after{background:var(--fg);opacity:.9}
 @media (max-width:599px){
-  .app{overflow-x:clip}
-  .layout{--idx:0;--px:0px;grid-template-columns:repeat(2,100%);column-gap:max(16px,env(safe-area-inset-left,0px));touch-action:pan-y}
+  .layout{--idx:0;--px:0px;grid-template-columns:repeat(2,100%);column-gap:max(16px,env(safe-area-inset-left,0px))}
   .layout>[data-pane-id]{min-height:55vh;transform:translate3d(calc(var(--idx) * (-100% - max(16px,env(safe-area-inset-left,0px))) + var(--px)),0,0);will-change:transform;transition:transform .34s cubic-bezier(.2,.85,.25,1)}
   .layout.dragging>[data-pane-id]{transition:none}
 }
@@ -709,8 +710,9 @@ html[data-style="moon"] .card,html[data-style="moon"] .pane{box-shadow:0 0 0 1px
 .st-opt{display:flex;flex-direction:column;gap:10px;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);text-align:left;color:var(--fg)}
 .st-opt:hover{border-color:var(--muted)}
 .st-opt.is-on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
-.st-opt-name{display:flex;align-items:center;gap:8px;font-weight:700;padding:0 4px}
-.st-opt-name small{flex:1;font-weight:500;font-size:.74rem;color:var(--muted)}
+.st-opt-name{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:8px;row-gap:3px;font-weight:700;padding:0 4px}
+.st-opt-name small{grid-column:1;grid-row:2;font-weight:500;font-size:.76rem;line-height:1.5;color:var(--muted)}
+.st-opt-name .ck{grid-column:2;grid-row:1}
 .st-opt .ck{color:var(--accent);visibility:hidden}.st-opt.is-on .ck{visibility:visible}
 .sp{background:var(--bg);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:7px;color:var(--fg);border:1px solid rgba(128,128,128,.25);pointer-events:none}
 .sp-hd{background:var(--hdr,var(--surface-2));border:1px solid var(--line);border-radius:calc(var(--r,14px) * .6);padding:6px 10px;font-family:var(--font-head,var(--font));font-weight:700;font-size:1.05rem}
@@ -739,6 +741,9 @@ html[data-style="moon"] .card,html[data-style="moon"] .pane{box-shadow:0 0 0 1px
     </div>
   </header>
 
+  <div class="pages" id="pages">
+  <section class="pg" id="habPage" data-pg="habit" aria-label="日課・習慣"><div id="habList"></div></section>
+  <div class="pg is-cur" id="dayPage" data-pg="day">
   <nav class="week" id="week" aria-label="週"></nav>
   <div id="notice"></div>
 
@@ -753,8 +758,9 @@ html[data-style="moon"] .card,html[data-style="moon"] .pane{box-shadow:0 0 0 1px
       <div id="records"></div>
     </section>
   </main>
-  <section id="habPage" aria-label="日課・習慣"><div id="habList"></div></section>
-  <section id="remPage" aria-label="ToDoリスト"><div id="remList"></div></section>
+  </div>
+  <section class="pg" id="remPage" data-pg="rem" aria-label="ToDoリスト"><div id="remList"></div></section>
+  </div>
   <section id="setPage" aria-labelledby="setTitle">
     <div class="set-card"><div class="set-head"><button type="button" class="icon-btn" id="setBack" aria-label="戻る"></button><h1 id="setTitle">設定</h1></div>
     <div class="set-wrap" id="setWrap"><nav class="set-nav" id="setNav" aria-label="設定の項目"></nav><div class="set-body" id="setBody"></div></div></div>
@@ -1710,20 +1716,44 @@ function setPane(p){
   if(main.dataset.show===p)return;main.dataset.show=p;
   $$('.pg-dots [data-pane]').forEach(b=>{const on=b.dataset.pane===p;b.classList.toggle('is-on',on);b.setAttribute('aria-selected',on)});
 }
-/* スマホ：スケジュール↔記録を指に追従してめくる */
+/* 左右スワイプ：日課｜（スマホはスケジュール｜記録）｜ToDo を地続きにめくる */
+const PAGES=['habit','day','rem'],pagesEl=$('#pages'),appEl=$('.app');
+function noSwipeAt(el){
+  for(let n=el;n&&n!==appEl;n=n.parentElement){
+    if(n.matches&&n.matches('input,select,textarea,[contenteditable],.hb-cropbox,[data-noswipe]'))return true;
+    if(n.scrollWidth>n.clientWidth+2){const ox=getComputedStyle(n).overflowX;if(ox==='auto'||ox==='scroll')return true}
+  }return false;
+}
 (()=>{let d=null,suppress=false;
-  main.addEventListener('pointerdown',e=>{if(window.innerWidth>=600||state.page!=='day'||!sheet.hidden||e.button>0)return;d={id:e.pointerId,x:e.clientX,y:e.clientY,t:performance.now(),dir:null,dx:0}});
-  main.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;
-    if(!d.dir){if(Math.hypot(dx,dy)<8)return;d.dir=Math.abs(dx)>Math.abs(dy)*1.2?'h':'v';if(d.dir==='h'){main.classList.add('dragging');try{main.setPointerCapture(e.pointerId)}catch(_){}}}
-    if(d.dir!=='h')return;const atEdge=(main.dataset.show==='sched'&&dx>0)||(main.dataset.show==='rec'&&dx<0);
-    d.dx=atEdge?dx*.25:dx;main.style.setProperty('--px',d.dx+'px')});
+  const pgOf=k=>$(`.pg[data-pg="${k}"]`);
+  /* ページの下の余白（ToDoが短いときなど）からもめくれるよう、アプリ全体で受け取る */
+  appEl.addEventListener('pointerdown',e=>{
+    const phone=window.innerWidth<600;
+    if(e.button>0||!sheet.hidden||!mvEl().hidden||state.page==='set')return;
+    if(!phone&&e.pointerType!=='touch')return;
+    if(noSwipeAt(e.target)||e.target.closest('#setPage'))return;
+    d={id:e.pointerId,x:e.clientX,y:e.clientY,t:performance.now(),dir:null,dx:0,mode:null,phone}});
+  appEl.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;
+    if(!d.dir){if(Math.hypot(dx,dy)<8)return;d.dir=Math.abs(dx)>Math.abs(dy)*1.2?'h':'v';if(d.dir!=='h')return;
+      try{pagesEl.setPointerCapture(e.pointerId);const sel=getSelection();if(sel&&!sel.isCollapsed)sel.removeAllRanges()}catch(_){}
+      const i=PAGES.indexOf(state.page),inner=d.phone&&state.page==='day'&&((main.dataset.show==='sched'&&dx<0)||(main.dataset.show==='rec'&&dx>0));
+      if(inner){d.mode='inner';main.classList.add('dragging')}
+      else{d.mode='page';d.to=PAGES[i+(dx<0?1:-1)]||null;pagesEl.classList.add('dragging');
+        if(d.to){const n=pgOf(d.to);n.style.setProperty('--py',window.scrollY+'px');n.classList.add('peek');
+          if(d.to==='day'&&d.phone)setPane(state.page==='rem'?'rec':'sched')}}}
+    if(d.dir!=='h')return;
+    if(d.mode==='inner'){d.dx=dx;main.style.setProperty('--px',dx+'px');return}
+    d.dx=d.to?dx:dx*.25;pagesEl.style.setProperty('--pdx',d.dx+'px')});
   const end=e=>{if(!d||e.pointerId!==d.id)return;const q=d;d=null;if(q.dir!=='h')return;
-    suppress=true;setTimeout(()=>{suppress=false},0);main.classList.remove('dragging');
-    const w=main.clientWidth||360,v=Math.abs(q.dx)/Math.max(1,performance.now()-q.t);
-    let p=main.dataset.show;if(Math.abs(q.dx)>w*.2||(Math.abs(q.dx)>30&&v>.45))p=q.dx<0?'rec':'sched';
-    setPane(p)};
-  main.addEventListener('pointerup',end);main.addEventListener('pointercancel',end);
-  main.addEventListener('click',e=>{if(suppress){e.stopPropagation();e.preventDefault()}},true);
+    suppress=true;setTimeout(()=>{suppress=false},0);
+    const w=pagesEl.clientWidth||360,v=Math.abs(q.dx)/Math.max(1,performance.now()-q.t),go=Math.abs(q.dx)>w*.2||(Math.abs(q.dx)>30&&v>.45);
+    if(q.mode==='inner'){main.classList.remove('dragging');setPane(go?(q.dx<0?'rec':'sched'):main.dataset.show);return}
+    pagesEl.classList.remove('dragging');
+    if(go&&q.to){setPage(q.to,true);return}
+    pagesEl.style.setProperty('--pdx','0px');
+    if(q.to){const n=pgOf(q.to);setTimeout(()=>{if(state.page!==q.to){n.classList.remove('peek');n.style.removeProperty('--py')}},360)}};
+  appEl.addEventListener('pointerup',end);appEl.addEventListener('pointercancel',end);
+  appEl.addEventListener('click',e=>{if(suppress){e.stopPropagation();e.preventDefault()}},true);
 })();
 $$('.pg-dots [data-pane]').forEach(b=>b.onclick=()=>setPane(b.dataset.pane));
 
@@ -1915,11 +1945,26 @@ function seedHabits(){
 /* 下部のページ切り替えバー */
 document.documentElement.dataset.page='day';
 $('#navHab').innerHTML=icon('habit');$('#navDay').innerHTML=icon('cal');$('#navRem').innerHTML=icon('checklist');$('#navAdd').innerHTML=icon('plus');
-function setPage(p){
+let pgTimer=0;
+function setPage(p,swiped){
   if(state.page===p){if(p==='day'&&state.date!==today())go(today());return}
+  const prev=state.page,sy=window.scrollY;
   state.page=p;document.documentElement.dataset.page=p;
   [['navHab','habit'],['navDay','day'],['navRem','rem']].forEach(([id,v])=>{const b=$('#'+id),on=v===p;b.classList.toggle('is-on',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
-  renderHeader();window.scrollTo(0,0);
+  renderHeader();
+  const pi=PAGES.indexOf(p);
+  if(pi<0||PAGES.indexOf(prev)<0){$$('.pg').forEach(x=>{x.classList.toggle('is-cur',x.dataset.pg===p);x.classList.remove('peek');x.style.removeProperty('--py')});if(pi>=0){pagesEl.classList.add('dragging');pagesEl.style.setProperty('--pi',pi);pagesEl.style.setProperty('--pdx','0px');pagesEl.offsetWidth;pagesEl.classList.remove('dragging')}window.scrollTo(0,0);return}
+  const o=$(`.pg[data-pg="${prev}"]`),n=$(`.pg[data-pg="${p}"]`);
+  if(!swiped&&p==='day'&&window.innerWidth<600)setPane(prev==='rem'?'rec':'sched');
+  clearTimeout(pgTimer);
+  $$('.pg').forEach(x=>{if(x!==o&&x!==n){x.classList.remove('is-cur','peek');x.style.removeProperty('--py')}});
+  /* 古いページは今の位置のまま流し、新しいページは上から表示 */
+  o.classList.remove('is-cur');o.classList.add('peek');o.style.setProperty('--py',(-sy)+'px');
+  n.classList.add('is-cur');n.classList.remove('peek');n.style.removeProperty('--py');
+  window.scrollTo(0,0);
+  if(Math.abs(PAGES.indexOf(prev)-pi)>1)PAGES.forEach(k=>{if(k!==prev&&k!==p){const m=$(`.pg[data-pg="${k}"]`);m.classList.add('peek');m.style.setProperty('--py','0px')}});
+  pagesEl.style.setProperty('--pi',pi);pagesEl.style.setProperty('--pdx','0px');
+  pgTimer=setTimeout(()=>{$$('.pg').forEach(x=>{if(x!==n){x.classList.remove('peek');x.style.removeProperty('--py')}})},380);
 }
 $('#navDay').onclick=()=>setPage('day');
 $('#navRem').onclick=()=>setPage('rem');
