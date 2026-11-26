@@ -209,6 +209,12 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .choice.watch .ico{background:var(--watch-soft);color:var(--watch)}
 .choice.done .ico{background:var(--done-soft);color:var(--done)}
 .choice.thought .ico{background:var(--thought-soft);color:var(--thought)}
+:root{--ate:color-mix(in srgb,#c2661c 78%,var(--fg));--ate-soft:color-mix(in srgb,#e0892f 16%,var(--surface))}
+.choice.ate .ico{background:var(--ate-soft);color:var(--ate)}
+.choice.ate{grid-column:1/-1}
+.chip.ate{background:var(--ate-soft);color:var(--ate)}
+.card.ate-card .card-head{margin-bottom:2px}
+.card.ate-card p{font-weight:500;color:var(--fg)}
 .choice.wide{grid-column:1/-1}
 .group-label{margin:14px 0 6px;font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.06em}
 .ev-detail{padding:4px 0 14px}
@@ -848,6 +854,7 @@ const ICONS={
   check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   moon:'<path d="M19.5 14.5A7.5 7.5 0 1 1 9.5 4.5a6 6 0 0 0 10 10z"/>',
   habit:'<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M8.5 12l2.6 2.6L20 5.5"/>',
+  meal:'<path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M3 20h18"/><path d="M9 8c0-1.5 1.2-1.5 1.2-3M13 8c0-1.5 1.2-1.5 1.2-3"/>',
   bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',
   chevL:'<path d="M15 6l-6 6 6 6"/>', chevR:'<path d="M9 6l6 6-6 6"/>',
   plus:'<path d="M12 5v14M5 12h14"/>', close:'<path d="M6 6l12 12M18 6L6 18"/>',
@@ -870,8 +877,10 @@ const KINDS={
   read:{label:'読んだ',icon:'novel',cls:'read',sub:'漫画・小説・新書・雑誌'},
   watched:{label:'観た',icon:'movie',cls:'watch',sub:'映画・ドラマ・アニメ・動画'},
   done:{label:'やれたこと',icon:'check',cls:'done',sub:'できたことを一行で'},
-  thought:{label:'思ったこと',icon:'bulb',cls:'thought',sub:'感じたことを一行で'}
+  thought:{label:'思ったこと',icon:'bulb',cls:'thought',sub:'感じたことを一行で'},
+  ate:{label:'食べたもの',icon:'meal',cls:'ate',sub:'料理や食事を、一言と写真で'}
 };
+const hasPhotoField=k=>isMedia(k)||k==='ate';
 const isMedia=k=>k==='read'||k==='watched';
 
 /* ---------- 保存（IndexedDB） ---------- */
@@ -1045,13 +1054,15 @@ function renderSchedule(){
 }
 
 function renderRecords(){
-  const all=entriesOn(state.date),cards=all.filter(e=>isMedia(e.kind)),done=all.filter(e=>e.kind==='done'),th=all.filter(e=>e.kind==='thought');
-  if(!all.length){$('#records').innerHTML=`<p class="empty">まだ記録はありません。読んだもの、観たもの、やれたことを残しておけます。</p>`;return}
+  const all=entriesOn(state.date),cards=all.filter(e=>isMedia(e.kind)),ate=all.filter(e=>e.kind==='ate'),done=all.filter(e=>e.kind==='done'),th=all.filter(e=>e.kind==='thought');
+  if(!all.length){$('#records').innerHTML=`<p class="empty">まだ記録はありません。読んだもの、観たもの、食べたもの、やれたことを残しておけます。</p>`;return}
   let h='';
   if(cards.length)h+=`<div class="records">${cards.map(e=>{const c=catById(e.categoryId)||CATS[0],k=KINDS[e.kind],p=e.photoId&&state.photos.get(e.photoId);
     return `<div class="card" role="button" tabindex="0" data-entry="${e.id}"><div class="card-head"><span class="chip ${k.cls}">${icon(c.icon)}${esc(c.name)}</span><h3>${esc(e.title)}</h3>${numText(e)?`<span class="num-tag num">${numText(e)}</span>`:''}</div>${e.body?`<p>${esc(e.body)}</p>`:''}${p?`<span class="thumb"><img src="${p.thumb}" alt="添付写真"></span>`:''}</div>`}).join('')}</div>`;
+  if(ate.length)h+=`<div class="records"${cards.length?' style="margin-top:12px"':''}>${ate.map(e=>{const p=e.photoId&&state.photos.get(e.photoId);
+    return `<div class="card ate-card" role="button" tabindex="0" data-entry="${e.id}"><div class="card-head"><span class="chip ate">${icon('meal')}食べたもの</span></div>${e.body?`<p>${esc(e.body)}</p>`:''}${p?`<span class="thumb"><img src="${p.thumb}" alt="食べたものの写真"></span>`:''}</div>`}).join('')}</div>`;
   const grp=(arr,kind)=>arr.length?`<section class="note-group ${KINDS[kind].cls}"><span class="chip ${KINDS[kind].cls}">${KINDS[kind].label}</span><ul>${arr.map(e=>`<li><button type="button" data-entry="${e.id}">${esc(e.body)}</button></li>`).join('')}</ul></section>`:'';
-  if(done.length||th.length){if(cards.length)h+='<div class="section-sep"></div>';h+=`<div class="notes${done.length&&th.length?' two':''}">${grp(done,'done')}${grp(th,'thought')}</div>`}
+  if(done.length||th.length){if(cards.length||ate.length)h+='<div class="section-sep"></div>';h+=`<div class="notes${done.length&&th.length?' two':''}">${grp(done,'done')}${grp(th,'thought')}</div>`}
   $('#records').innerHTML=h;
 }
 
@@ -1062,7 +1073,8 @@ function openSheet(title,body,mount){
   sheet.innerHTML=`<div class="sheet-head"><h2 id="sheetTitle">${title}</h2><button type="button" class="icon-btn" data-close aria-label="閉じる">${icon('close')}</button></div><div class="sheet-body">${body}</div>`;
   sheet.setAttribute('aria-labelledby','sheetTitle');sheet.hidden=false;scrim.hidden=false;
   if(mount)mount(sheet);
-  const f=sheet.querySelector('input:not([type=radio]):not([type=file]),textarea,.choice,.btn-primary');(f||sheet.querySelector('[data-close]')).focus({preventScroll:true});
+  /* data-nofocus の画面では入力欄に自動で合わせない（スマホでキーボードが開いて一覧が隠れるため） */
+  const f=sheet.querySelector('[data-nofocus]')?null:sheet.querySelector('input:not([type=radio]):not([type=file]),textarea,.choice,.btn-primary');(f||sheet.querySelector('[data-close]')).focus({preventScroll:true});
 }
 function closeSheet(){sheet.hidden=true;scrim.hidden=true;sheet.innerHTML='';if(lastFocus&&lastFocus.focus)try{lastFocus.focus({preventScroll:true})}catch(e){}}
 function armDelete(btn,fn){btn.addEventListener('click',()=>{if(btn.classList.contains('armed')){fn();return}btn.classList.add('armed');btn.textContent='もう一度押して削除';setTimeout(()=>{if(btn.isConnected){btn.classList.remove('armed');btn.textContent='削除'}},3500)})}
@@ -1165,23 +1177,28 @@ function openEntryForm(kind,entry,pre={}){
     <div class="field-label" id="f-numrow" hidden><span><span id="f-numlbl"></span>（任意）</span><div class="num-row"><input id="f-n1" type="number" inputmode="numeric" min="1" step="1" value="${e.numFrom||''}" aria-label="開始"><span>〜</span><input id="f-n2" type="number" inputmode="numeric" min="1" step="1" value="${e.numTo||''}" aria-label="終わり（任意）"><span id="f-unit"></span></div><p class="hint" style="margin:0;font-weight:400">1つだけなら左側だけ入れてください。</p></div>
     <label>一言<textarea id="f-body" rows="3" placeholder="印象に残ったことなど">${esc(e.body)}</textarea></label>
     <div class="photo-field"><span class="field-label">写真</span><div class="photo-prev" id="f-prev"></div><div class="photo-btns"><label class="btn-ghost" style="flex-direction:row;color:var(--fg);font-size:.9rem">${icon('photo')}<span id="f-photo-lbl">写真を選ぶ</span><input type="file" id="f-photo" accept="image/*" hidden></label><button type="button" class="btn-ghost" id="f-photo-rm" hidden>外す</button></div></div>`
+    :kind==='ate'?`<label>食べたもの<textarea id="f-body" rows="3" placeholder="例：駅前の定食屋で唐揚げ定食。衣がさくさくだった。">${esc(e.body)}</textarea></label>
+    <div class="photo-field"><span class="field-label">写真</span><div class="photo-prev" id="f-prev"></div><div class="photo-btns"><label class="btn-ghost" style="flex-direction:row;color:var(--fg);font-size:.9rem">${icon('photo')}<span id="f-photo-lbl">写真を選ぶ</span><input type="file" id="f-photo" accept="image/*" hidden></label><button type="button" class="btn-ghost" id="f-photo-rm" hidden>外す</button></div></div>`
     :`<label>${k.label}<textarea id="f-body" rows="3" placeholder="${kind==='done'?'例：机の上を片づけた。':'例：夜に少し余裕があると、本を開きやすい。'}">${esc(e.body)}</textarea></label>`;
   openSheet(`${k.label}を${entry?'編集':'記録'}`,`<form class="form" id="enForm" novalidate>
     <label>日付<input id="f-date" type="date" value="${e.date}"></label>${body}
     <div class="form-actions">${entry?'<button type="button" class="btn-danger" id="f-del">削除</button>':''}<span class="spacer"></span><button type="button" class="btn-ghost" data-close>キャンセル</button><button type="submit" class="btn-primary">保存</button></div></form>`,
   s=>{
-    const showPhoto=()=>{if(!media)return;$('#f-prev',s).innerHTML=photo?`<button type="button" class="photo-open" aria-label="写真を大きく見る"><img src="${photo.thumb}" alt="選んだ写真"><span class="photo-zoom">${icon('photo')}拡大</span></button>`:'';const po=$('.photo-open',s);if(po)po.onclick=()=>viewPhoto(photo.full||photo.thumb);$('#f-photo-rm',s).hidden=!photo;$('#f-photo-lbl',s).textContent=photo?'写真を変える':'写真を選ぶ'};
+    const showPhoto=()=>{if(!hasPhotoField(kind))return;$('#f-prev',s).innerHTML=photo?`<button type="button" class="photo-open" aria-label="写真を大きく見る"><img src="${photo.thumb}" alt="選んだ写真"><span class="photo-zoom">${icon('photo')}拡大</span></button>`:'';const po=$('.photo-open',s);if(po)po.onclick=()=>viewPhoto(photo.full||photo.thumb);$('#f-photo-rm',s).hidden=!photo;$('#f-photo-lbl',s).textContent=photo?'写真を変える':'写真を選ぶ'};
     showPhoto();
+    if(hasPhotoField(kind)){
+      $('#f-photo',s).onchange=async x=>{const f=x.target.files&&x.target.files[0];if(!f)return;try{photo=await compress(f);photoChanged=true;showPhoto()}catch(err){toast('この画像は読み込めませんでした')}};
+      $('#f-photo-rm',s).onclick=()=>{photo=null;photoChanged=true;showPhoto()};
+    }
     if(media){
       const updNum=()=>{const ch=$('input[name=cat]:checked',s),c=ch&&catById(ch.value),row=$('#f-numrow',s);row.hidden=!(c&&c.unit);if(c&&c.unit){$('#f-numlbl',s).textContent=c.numLabel;$('#f-unit',s).textContent=c.unit}};
       updNum();$$('input[name=cat]',s).forEach(r=>r.addEventListener('change',updNum));
-      $('#f-photo',s).onchange=async x=>{const f=x.target.files&&x.target.files[0];if(!f)return;try{photo=await compress(f);photoChanged=true;showPhoto()}catch(err){toast('この画像は読み込めませんでした')}};
-      $('#f-photo-rm',s).onclick=()=>{photo=null;photoChanged=true;showPhoto()};
     }
     $('#enForm',s).onsubmit=x=>{x.preventDefault();
       const bodyTxt=$('#f-body',s).value.trim(),title=media?$('#f-title',s).value.trim():'';
       if(media&&!title){$('#f-title',s).focus();toast('タイトルを入れてください');return}
-      if(!media&&!bodyTxt){$('#f-body',s).focus();toast('内容を入れてください');return}
+      if(kind==='ate'&&!bodyTxt&&!photo){$('#f-body',s).focus();toast('一言か写真を入れてください');return}
+      if(!media&&kind!=='ate'&&!bodyTxt){$('#f-body',s).focus();toast('内容を入れてください');return}
       e.date=$('#f-date',s).value||state.date;e.body=bodyTxt;e.title=title;delete e.sample;
       if(media){const c=$('input[name=cat]:checked',s);e.categoryId=c?c.value:cats[0].id;
         const cc=catById(e.categoryId),p=v=>{const n=parseInt(v,10);return n>0?n:null};
@@ -1512,7 +1529,7 @@ function openCatManager(){
   const rows=()=>{const list=todoCats();return list.length?list.map((c,i)=>`<div class="cm-row" data-cid="${c.id}">
       <div class="cm-top"><input type="text" class="cm-name" maxlength="20" value="${esc(c.name)}" aria-label="カテゴリ名"><button type="button" class="icon-btn" data-cm="up" aria-label="上へ"${i===0?' disabled':''}>${icon('chevU')}</button><button type="button" class="icon-btn" data-cm="down" aria-label="下へ"${i===list.length-1?' disabled':''}>${icon('chevD')}</button><button type="button" class="btn-danger cm-del" data-cm="del">削除</button></div>
       <div class="cm-colors" role="radiogroup" aria-label="色">${CAT_COLORS.map(x=>`<button type="button" class="sw-b${x.id===c.color?' is-on':''}" role="radio" aria-checked="${x.id===c.color}" aria-label="${x.name}" data-cm="color" data-color="${x.id}" style="background:${x.c}"></button>`).join('')}</div></div>`).join(''):'<p class="empty">カテゴリはまだありません。</p>'};
-  openSheet('カテゴリを編集',`<p class="hint" style="margin:0 0 12px">名前は直接書き換えられます。削除したカテゴリのToDoは「未分類」に移ります。</p><div id="cm-list" class="stack" style="gap:10px">${rows()}</div><div style="margin-top:14px">${newCatRow('cm-new')}</div>`,
+  openSheet('カテゴリを編集',`<p class="hint" data-nofocus style="margin:0 0 12px">名前は直接書き換えられます。削除したカテゴリのToDoは「未分類」に移ります。</p><div id="cm-list" class="stack" style="gap:10px">${rows()}</div><div style="margin-top:14px">${newCatRow('cm-new')}</div>`,
   s=>{
     const box=$('#cm-list',s),redraw=()=>{box.innerHTML=rows();renderReminders()};
     box.addEventListener('change',e=>{const inp=e.target.closest('.cm-name');if(!inp)return;const id=inp.closest('.cm-row').dataset.cid,list=todoCats(),c=list.find(x=>x.id===id),v=inp.value.trim();
